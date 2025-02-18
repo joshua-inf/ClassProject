@@ -5,12 +5,14 @@ import DropdownNotification from "./DropdownNotification";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 import Search from "../Search/Search";
+import { useRouter } from "next/navigation";
 // import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
+  const navigate = useRouter()
   return (
     <header className="fixed w-full top-0 flex bg-[#ddd] shadow.md">
       <div className="flex flex-grow items-center justify-between px-4 py-4 md:px-6 2xl:px-11">
@@ -77,15 +79,13 @@ const Header = (props: {
             {/* <DropdownNotification /> */}
           </ul>
 
-          {/* <DarkModeSwitcher />
-          <!-- User Area -->
-          <DropdownUser />
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn> */}
+          {/* <DarkModeSwitcher /> */}
+          {/* <!-- User Area --> */}
+          <div>
+            <button onClick={()=> navigate.push("/login")} className="bg-blue-800 py-2 rounded-md text-white px-4">
+              login
+            </button>
+          </div>
         </div>
       </div>
     </header>
