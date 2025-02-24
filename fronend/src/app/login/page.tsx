@@ -1,8 +1,9 @@
+import { LoginPage } from '@/components/Navigation/login/Login'
 import React from 'react'
 
 const Login = () => {
   return (
-    <div>Login</div>
+    <LoginPage/>
   )
 }
 
