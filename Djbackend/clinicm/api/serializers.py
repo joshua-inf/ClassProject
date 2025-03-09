@@ -1,0 +1,49 @@
+#speficify class that converts model json data
+# because whenever we are working with api send json
+#for easy interaction with api
+from rest_framework import serializers
+from django.contrib.auth import authenticate #checks if user is authenticated the grants access
+from .models import CustomUser
+
+#for user registration
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password=serializers.CharField(write_only=True)#accepts user data but not include in reponse for security
+
+
+    class Meta:
+        model=CustomUser
+        fields=['username', "StudentId", 'first_name', 'last_name',"password"] #some built in fields in the user model except StudentNo
+    #modify existing create method to handle the studentId 
+    def create(self, validated_data):
+        user = CustomUser.objects.create_user(
+            username=validated_data['username'],
+            StudentId=validated_data['StudentId'],
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''), # to avoid key error incase of missing data to avoid confilict in database we put empty string
+            last_name=validated_data.get('last_name', ''),
+            
+        )
+        return user
+    #json test payload
+   # {
+   # "username": "username",
+   # "StudentId": "33342",
+   # "password": "jsmjsnnc",
+   # "first_name": "zed",
+   # "last_name": "surname"
+   #}
+
+
+
+#login serializer 
+# For user login
+class UserLoginSerializer(serializers.Serializer):  # Inherit from serializers.Serializer since its not using a model
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):  # data is being passed as an argument
+        user = authenticate(username=data["username"], password=data["password"])
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Invalid username or password")
+    
