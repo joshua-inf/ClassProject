@@ -3,7 +3,7 @@
 #for easy interaction with api
 from rest_framework import serializers
 from django.contrib.auth import authenticate #checks if user is authenticated the grants access
-from .models import CustomUser
+from .models import CustomUser, Patient, Clinician, Visit, Vital, MedicalHistory, Diagnosis, Prescription, Test, FollowUp
 
 #for user registration
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -46,4 +46,73 @@ class UserLoginSerializer(serializers.Serializer):  # Inherit from serializers.S
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Invalid username or password")
-    
+
+
+
+class PatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Patient
+        fields = '__all__'
+
+
+class ClinicianSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Clinician
+        fields = '__all__'
+
+
+class VisitSerializer(serializers.ModelSerializer):
+    patient = PatientSerializer(read_only=True)  # Nested serialization
+    clinician = ClinicianSerializer(read_only=True)
+
+    class Meta:
+        model = Visit
+        fields = '__all__'
+
+
+class VitalSerializer(serializers.ModelSerializer):
+    visit = VisitSerializer(read_only=True)
+
+    class Meta:
+        model = Vital
+        fields = '__all__'
+
+
+class MedicalHistorySerializer(serializers.ModelSerializer):
+    patient = PatientSerializer(read_only=True)
+
+    class Meta:
+        model = MedicalHistory
+        fields = '__all__'
+
+
+class DiagnosisSerializer(serializers.ModelSerializer):
+    visit = VisitSerializer(read_only=True)
+
+    class Meta:
+        model = Diagnosis
+        fields = '__all__'
+
+
+class PrescriptionSerializer(serializers.ModelSerializer):
+    visit = VisitSerializer(read_only=True)
+
+    class Meta:
+        model = Prescription
+        fields = '__all__'
+
+
+class TestSerializer(serializers.ModelSerializer):
+    visit = VisitSerializer(read_only=True)
+
+    class Meta:
+        model = Test
+        fields = '__all__'
+
+
+class FollowUpSerializer(serializers.ModelSerializer):
+    visit = VisitSerializer(read_only=True)
+
+    class Meta:
+        model = FollowUp
+        fields = '__all__'
