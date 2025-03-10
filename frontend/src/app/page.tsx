@@ -1,5 +1,6 @@
 'use client'
-import DefaultLayout from "@/components/Navigation/DefaultLayout";
+import { Dashboard } from "@/components/Dashboard/Dashboard";
+import NavigationLayout from "@/components/Navigation/NavigationLayout";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -20,9 +21,9 @@ export default function Home() {
   return (
     <>
       <div>
-        <DefaultLayout>
-          Main
-        </DefaultLayout>
+      <NavigationLayout>
+        <Dashboard/>
+      </NavigationLayout> 
       </div>
     </>
   );

@@ -1,10 +1,13 @@
 'use client'
 import { TextField } from '@mui/material'
 import axios from 'axios'
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import { ClockLoader } from 'react-spinners';
 
 export const LoginPage = () => {
     const [loading, setLoading] = useState(false)
+    const router = useRouter()
 
     const LoginFunc = (e: React.FormEvent<HTMLFormElement>) => {
         setLoading(true)
@@ -26,23 +29,30 @@ export const LoginPage = () => {
             .finally(() => {
                 setLoading(false)
             })
+
+            router.push('/')
     }
     return (
         <div>
-            <div className='flex justify-center items-center min-h-[100vh]'>
+            <div className='flex dark:bg-gray-900 justify-center items-center min-h-[100vh]'>
                 <div className=''>
                     {
                         loading ?
                             <>
-                                <div>
-                                    Loging you in...please wait..
+                                <div className='text-gray-800 dark:text-gray-300'>
+                                    <div className='flex justify-center items-center'>
+                                        <ClockLoader size={20} color="white" />
+                                    </div>
+                                    <div className='text-center'>
+                                        Loging you in...please wait..
+                                    </div>
                                 </div>
                             </>
                             :
 
                             <>
 
-                                <form onSubmit={(e) => LoginFunc(e)} className='flex shadow-gray-400 shadow-md bg-gray-200 p-5 rounded-md w-[full] min-w-[400px] flex-col gap-4'>
+                                <form onSubmit={(e) => LoginFunc(e)} className='flex text-gray-800 dark:text-gray-300 shadow-md  bg-transparent border border-gray-800 dark:border-gray-400 p-5 rounded-md w-[full] min-w-[400px] flex-col gap-4'>
                                     <div className='text-center  font-bold text-2xl'>Login </div>
                                     <TextField
                                         name='email'
@@ -53,7 +63,7 @@ export const LoginPage = () => {
                                         id="input-password" label="Password"
                                         type='password'
                                         variant="standard" />
-                                    <button disabled={loading} type='submit' className='bg-blue-500 text-white rounded-md p-2'>
+                                    <button disabled={loading} type='submit' className='bg-blue-500 dark:bg-blue-600 text-white rounded-md p-2'>
                                         Login
                                     </button>
                                 </form>
