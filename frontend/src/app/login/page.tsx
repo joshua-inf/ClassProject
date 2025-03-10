@@ -1,4 +1,5 @@
-import { LoginPage } from '@/components/Navigation/login/Login'
+
+import { LoginPage } from '@/components/login/Login'
 import React from 'react'
 
 const Login = () => {
