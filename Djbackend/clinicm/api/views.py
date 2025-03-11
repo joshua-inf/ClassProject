@@ -134,7 +134,7 @@ def visit_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#vists view
+#vists view api
 @api_view(['GET', 'PUT', 'DELETE'])
 def visit_detail(request, pk):
     try:
@@ -156,6 +156,8 @@ def visit_detail(request, pk):
     elif request.method == 'DELETE':
         visit.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+#medical view api
 
 
 
