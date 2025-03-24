@@ -29,7 +29,7 @@ export const LoginPage = () => {
             .finally(() => {
                 setLoading(false)
             })
-``
+
             router.push('/')
     }
     return (
