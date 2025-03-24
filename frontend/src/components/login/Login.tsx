@@ -29,7 +29,7 @@ export const LoginPage = () => {
             .finally(() => {
                 setLoading(false)
             })
-
+``
             router.push('/')
     }
     return (
@@ -44,7 +44,7 @@ export const LoginPage = () => {
                                         <ClockLoader size={20} color="white" />
                                     </div>
                                     <div className='text-center'>
-                                        Loging you in...please wait..
+                                        Logging you in...please wait..
                                     </div>
                                 </div>
                             </>
