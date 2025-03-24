@@ -34,17 +34,17 @@ export const LoginPage = () => {
     }
     return (
         <div>
-            <div className='flex dark:bg-gray-900 justify-center items-center min-h-[100vh]'>
+            <div className='flex bg-gray-200 justify-center items-center min-h-[100vh]'>
                 <div className=''>
                     {
                         loading ?
                             <>
-                                <div className='text-gray-800 dark:text-gray-300'>
+                                <div className='text-gray-800 '>
                                     <div className='flex justify-center items-center'>
-                                        <ClockLoader size={20} color="white" />
+                                        <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
                                     </div>
                                     <div className='text-center'>
-                                        Loging you in...please wait..
+                                        Logging you in...please wait..
                                     </div>
                                 </div>
                             </>
@@ -52,20 +52,24 @@ export const LoginPage = () => {
 
                             <>
 
-                                <form onSubmit={(e) => LoginFunc(e)} className='flex text-gray-800 dark:text-gray-300 shadow-md  bg-transparent border border-gray-800 dark:border-gray-400 p-5 rounded-md w-[full] min-w-[400px] flex-col gap-4'>
-                                    <div className='text-center  font-bold text-2xl'>Login </div>
-                                    <TextField
-                                        name='email'
-                                        id="input-email" label="Email"
-                                        type='email' variant="standard" />
-                                    <TextField
-                                        name='password'
-                                        id="input-password" label="Password"
-                                        type='password'
-                                        variant="standard" />
-                                    <button disabled={loading} type='submit' className='bg-blue-500 dark:bg-blue-600 text-white rounded-md p-2'>
-                                        Login
-                                    </button>
+                                <form onSubmit={(e) => LoginFunc(e)} className='flex text-gray-800  shadow-md  bg-transparent  p-5 rounded-md w-[full] min-w-[400px] flex-col gap-4'>
+                                <div className='flex flex-col gap-1 items-center'>
+                                    <div className='text-2xl font-bold'>TMDb</div>
+                                    <div  className='text-gray-800 '>login</div>
+                                </div>
+                                <div className='flex flex-col gap-2'>
+                                    <div className='flex flex-col gap-1'>
+                                        <label htmlFor="email">Email</label>
+                                        <input type="email" name='email' className='w-full p-2 rounded-md border border-gray-800 dark:border-gray-400' placeholder='Email' />
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <label htmlFor="password">Password</label>
+                                        <input type="password" name='password' className='w-full p-2 rounded-md border border-gray-800 dark:border-gray-400' placeholder='Password' />
+                                    </div>
+                                    <div className='flex justify-center items-center'>
+                                        <button className='bg-blue-500 text-white p-2 w-full rounded-md' type='submit'>Login</button>
+                                    </div>
+                                </div>
                                 </form>
                             </>
 

@@ -1,116 +1,165 @@
 import React, { useState } from 'react'
 import { ClockLoader } from 'react-spinners';
-import { FaGraduationCap, FaChartLine, FaUsers, FaClock, FaCalendarCheck, FaCheckCircle, FaTimesCircle, FaStethoscope, FaHeartbeat } from 'react-icons/fa';
+import { FaGraduationCap, FaChartLine, FaUsers, FaClock, FaCalendarCheck, FaCheckCircle, FaTimesCircle, FaStethoscope, FaHeartbeat, FaLungs, FaVirus } from 'react-icons/fa';
 import { MdTrendingUp, MdTrendingDown } from 'react-icons/md';
-import { FaPeopleGroup } from 'react-icons/fa6';
+import { FaPeopleGroup, FaVirusCovid } from 'react-icons/fa6';
+import { IoPersonCircleOutline } from 'react-icons/io5';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Card, CardContent, Typography, useTheme, Stack, Box } from '@mui/material';
+
+type DayData = {
+    male: number;
+    female: number;
+};
+
+type WeekData = {
+    [key in 'Sat' | 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri']: DayData;
+};
 
 export const Dashboard = () => {
     const [loading, setLoading] = useState(true);
+    const theme = useTheme();
+
+    const admissionData: WeekData = {
+        'Sat': { male: 450, female: 220 },
+        'Sun': { male: 320, female: 100 },
+        'Mon': { male: 300, female: 220 },
+        'Tue': { male: 450, female: 350 },
+        'Wed': { male: 150, female: 220 },
+        'Thu': { male: 380, female: 220 },
+        'Fri': { male: 400, female: 320 },
+    };
+
+    // Transform data for Recharts
+    const chartData = Object.entries(admissionData).map(([day, data]) => ({
+        day,
+        Male: data.male,
+        Female: data.female
+    }));
+
     return (
-        <div className='text-gray-800 flex flex-col gap-4 dark:text-gray-300'>
-            <div className='flex gap-4 flex-wrap'>
-                <div className='bg-gradient-to-r grow cursor-pointer from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-xl p-6 text-white shadow-lg transform hover:scale-105 transition-all duration-200'>
-                    <div className='flex justify-between items-center mb-4'>
-                        <FaPeopleGroup className='text-4xl opacity-80' />
-                        <div className='bg-blue-400 bg-opacity-30 dark:bg-blue-500 dark:bg-opacity-30 p-2 rounded-lg'>
-                            <MdTrendingUp className='text-xl' />
-                        </div>
+        <div className='text-gray-800 p-5 flex flex-col gap-4 '>
+            <div className='flex gap-4  flex-wrap'>
+               <div className='flex hover:scale-105 transition-all duration-300 cursor-pointer gap-2 grow items-center'>
+                    <IoPersonCircleOutline className='text-5xl bg-blue-500/50 rounded-full p-2' />
+                    <div className='flex flex-col gap-1'>
+                        <div className='text-sm text-[#718EBF]'>Total Patients</div>
+                        <div className='text-2xl font-bold'>1 000</div>
                     </div>
-                    <h3 className='text-lg opacity-80'>Total Patients</h3>
-                    {!loading ? (
-                        <ClockLoader size={20} color="white" />
-                    ) : (
-                        <p className='text-3xl font-bold'>0</p>
-                    )}
-                </div>
+               </div>
 
+               <div className='flex hover:scale-105 transition-all duration-300 cursor-pointer gap-2 grow items-center'>
+                    <FaCalendarCheck className='text-5xl bg-green-500/50 rounded-full p-2' />
+                    <div className='flex flex-col gap-1'>
+                        <div className='text-sm text-[#718EBF]'>Total Visits</div>
+                        <div className='text-2xl font-bold'>2 500</div>
+                    </div>
+               </div>
 
-                {/* APointments */}
-                <div className='bg-gradient-to-r grow cursor-pointer flex flex-col gap-2 from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-xl p-6 text-white shadow-lg transform hover:scale-105 transition-all duration-200'>
-                    <div className='flex justify-between items-center mb-4'>
-                        <FaCalendarCheck className='text-4xl opacity-80' />
+               <div className='flex hover:scale-105 transition-all duration-300 cursor-pointer gap-2 grow items-center'>
+                    <FaStethoscope className='text-5xl bg-purple-500/50 rounded-full p-2' />
+                    <div className='flex flex-col gap-1'>
+                        <div className='text-sm text-[#718EBF]'>Prescriptions</div>
+                        <div className='text-2xl font-bold'>1 250</div>
                     </div>
-                    <h3 className='text-lg opacity-80'>Appointments</h3>
-                    <div className='flex gap-3'>
-                        <div className='flex flex-col justify-center items-center gap-1'>
-                            <div className='flex items-center gap-2'>
-                                <FaClock />
-                                <p className='text-sm opacity-80'>Pending</p>
-                            </div>
-                            <p className='text-2xl font-bold  opacity-80'>0</p>
-                        </div>
-                        <div className='flex flex-col justify-center items-center gap-1'>
-                            <div className='flex items-center gap-2'>
-                                <FaCheckCircle />
-                                <p className='text-sm opacity-80'>Completed</p>
-                            </div>
-                            <p className='text-2xl font-bold  opacity-80'>0</p>
-                        </div>
-                        <div className='flex  flex-col justify-center items-center gap-1'>
-                            <div className='flex items-center gap-2'>
-                                <FaTimesCircle className='' />
-                                <p className='text-sm  opacity-80'>Cancelled</p>
-                            </div>
-                            <p className='text-2xl font-bold  opacity-80'>0</p>
-                        </div>
-                    </div>
-                </div>
+               </div>
 
-                {/* Total Diagnosis */}
-                <div className='cursor-pointer grow bg-gradient-to-r from-orange-400 to-pink-500 dark:from-orange-600 dark:to-pink-700 rounded-xl p-6 text-white shadow-lg transform hover:scale-105 transition-all duration-200'>
-                    <div className='flex justify-between items-center mb-4'>
-                        <FaStethoscope className='text-4xl opacity-80' />
-                        <div className='bg-blue-400 bg-opacity-30 dark:bg-blue-500 dark:bg-opacity-30 p-2 rounded-lg'>
-                            <MdTrendingUp className='text-xl' />
-                        </div>
+               <div className='flex hover:scale-105 transition-all duration-300 cursor-pointer grow gap-2 items-center'>
+                    <FaHeartbeat className='text-5xl bg-red-500/50 rounded-full p-2' />
+                    <div className='flex flex-col gap-1'>
+                        <div className='text-sm text-[#718EBF]'>Popular Cases</div>
+                        <div className='text-2xl font-bold'>Maleria</div>
                     </div>
-                    <h3 className='text-lg opacity-80'>Total Diagnosis</h3>
-                    {!loading ? (
-                        <ClockLoader size={20} color="white" />
-                    ) : (
-                        <p className='text-3xl font-bold'>0</p>
-                    )}
-                </div>
+               </div>
             </div>
             <div className='flex flex-wrap gap-4'>
-                {/* Common illnesses */}
-                <div className='cursor-pointer grow bg-gradient-to-r from-purple-500 to-indigo-500 dark:from-purple-600 dark:to-indigo-700 rounded-xl p-6 text-white shadow-lg transform transition-all duration-200'>
-                    <div className='flex justify-between items-center mb-4'>
-                        <FaHeartbeat className='text-4xl opacity-80' />
+                <div className='grow'>
+                    <div className="bg-white rounded-lg shadow-sm p-6">
+                        <h2 className="text-xl font-semibold mb-4">Weekly Admission</h2>
+                        <div style={{ width: '100%', height: 400 }}>
+                            <ResponsiveContainer>
+                                <BarChart
+                                    data={chartData}
+                                    margin={{
+                                        top: 20,
+                                        right: 30,
+                                        left: 20,
+                                        bottom: 5,
+                                    }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                    <XAxis 
+                                        dataKey="day"
+                                        stroke="#718EBF"
+                                        style={{ fontSize: '0.875rem' }}
+                                    />
+                                    <YAxis
+                                        stroke="#718EBF" 
+                                        style={{ fontSize: '0.875rem' }}
+                                    />
+                                    <Tooltip
+                                        contentStyle={{
+                                            backgroundColor: '#fff',
+                                            border: '1px solid #e5e7eb',
+                                            borderRadius: '0.5rem'
+                                        }}
+                                    />
+                                    <Legend
+                                        wrapperStyle={{
+                                            paddingTop: '20px'
+                                        }}
+                                    />
+                                    <Bar
+                                        dataKey="Male"
+                                        fill="#3b82f6"
+                                        radius={[4, 4, 0, 0]}
+                                    />
+                                    <Bar
+                                        dataKey="Female"
+                                        fill="#ec4899"
+                                        radius={[4, 4, 0, 0]}
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </div>
                     </div>
-                    <h3 className='text-lg opacity-80'>Common Illnesses</h3>
-                    <div>
-                        <div className='flex flex-col gap-2'>
-                            {/* title */}
-                            <div className='flex justify-between p-2 rounded-lg items-center gap-2'>
-                                <p className='text-sm opacity-80'>Illness</p>
-                                <p className='text-sm opacity-80'>Count</p>
+                </div>
+
+                <div className="bg-white grow rounded-lg shadow-sm p-6">
+                    <h2 className="text-xl font-semibold mb-4 text-gray-800">Case</h2>
+                    <div className="flex flex-col gap-6">
+                        <div className="flex items-center gap-4 hover:scale-105 transition-all duration-300 cursor-pointer bg-yellow-50 p-4 rounded-lg shadow-sm">
+                            <div className="bg-yellow-100 p-3 rounded flex items-center justify-center">
+                                <FaVirusCovid className="text-2xl text-yellow-600" />
                             </div>
-                            <hr />
-                            {/* illnesses */}
-                            <div className='flex justify-between bg-white bg-opacity-20 p-2 rounded-lg items-center gap-2'>
-                                <p className='text-2xl opacity-80'>Malaria</p>
-                                <p className='text-2xl opacity-80'>300</p>
+                            <div className="flex-grow">
+                                <div className="text-lg font-medium">Maleria</div>
+                                <div className="text-sm text-gray-500">300</div>
                             </div>
-                            <div className='flex justify-between bg-white bg-opacity-20 p-2 rounded-lg items-center gap-2'>
-                                <p className='text-sm opacity-80'>Cough</p>
-                                <p className='text-sm opacity-80'>{Math.floor(Math.random() * 100) + 1}</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 hover:scale-105 transition-all duration-300 cursor-pointer">
+                            <div className="bg-blue-100 p-3 rounded flex items-center justify-center">
+                                <FaVirusCovid className="text-2xl text-blue-600" />
                             </div>
-                            <div className='flex justify-between bg-white bg-opacity-20 p-2 rounded-lg items-center gap-2'>
-                                <p className='text-sm opacity-80'>Cold</p>
-                                <p className='text-sm opacity-80'>{Math.floor(Math.random() * 100) + 1}</p>
+                            <div className="flex-grow">
+                                <div className="text-lg font-medium">Hypertension</div>
+                                <div className="text-sm text-gray-500">20</div>
                             </div>
-                            <div className='flex justify-between bg-white bg-opacity-20 p-2 rounded-lg items-center gap-2'>
-                                <p className='text-sm opacity-80'>Fever</p>
-                                <p className='text-sm opacity-80'>{Math.floor(Math.random() * 100) + 1}</p>
+                        </div>
+
+                        <div className="flex items-center gap-4 hover:scale-105 transition-all duration-300 cursor-pointer">
+                            <div className="bg-cyan-100 p-3 rounded flex items-center justify-center">
+                                <FaVirusCovid className="text-2xl text-cyan-600" />
                             </div>
-                            <div className='flex justify-between bg-white bg-opacity-20 p-2 rounded-lg items-center gap-2'>
-                                <p className='text-sm opacity-80'>Flu</p>
-                                <p className='text-sm opacity-80'>{Math.floor(Math.random() * 100) + 1}</p>
+                            <div className="flex-grow">
+                                <div className="text-lg font-medium">Influenza</div>
+                                <div className="text-sm text-gray-500">10</div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     )
