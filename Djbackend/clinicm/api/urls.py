@@ -5,8 +5,8 @@ urlpatterns = [
   path("register/",user_register, name="register"), 
   path("login/", user_login, name="login"),
   # Patients
-    path('api/patients/', patient_list, name='patient-list'),
-    path('api/patients/<int:pk>/', patient_detail, name='patient-detail'),
+    path('patients/', patient_list, name='patient-list'),
+    path('patients/<int:pk>/', patient_detail, name='patient-detail'),
 
     # Doctors
     path('clinicians/', Clinician_list, name='doctor-list'),

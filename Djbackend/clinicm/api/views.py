@@ -10,6 +10,7 @@ from .serializers import (UserRegistrationSerializer,UserLoginSerializer,Patient
     TestSerializer, FollowUpSerializer)
 from .models import CustomUser, Patient, Clinician, Test, Vital, Visit, FollowUp, MedicalHistory,Prescription
 from rest_framework import status
+from django.db.models import Q
 
 # user Registration View
 @api_view(['POST'])
@@ -55,6 +56,25 @@ def user_login(request):
 @api_view(['GET', 'POST'])
 def patient_list(request):
     if request.method == 'GET':
+        # Get search parameters from query params
+        student_id = request.query_params.get('student_id', None)
+        name = request.query_params.get('name', None)
+
+        # Start with all patients
+        patients = Patient.objects.all()
+
+        # Filter by student_id if provided
+        if student_id:
+            patients = patients.filter(customuser__StudentId__icontains=student_id)
+
+        # Filter by name if provided (search first name or last name)
+        if name:
+            patients = patients.filter(
+                Q(first_name__icontains=name) | Q(last_name__icontains=name)
+            )
+        #Q object in Django is used to build complex queries for filtering data. It allows you
+        #  to combine multiple conditions with AND, OR, and NOT operators, 
+        # and it enables you to perform more advanced filtering, like searching multiple fields at once.
         patients = Patient.objects.all()
         serializer = PatientSerializer(patients, many=True)
         return Response(serializer.data)
