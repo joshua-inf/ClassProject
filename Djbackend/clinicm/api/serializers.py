@@ -116,3 +116,4 @@ class FollowUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = FollowUp
         fields = '__all__'
+

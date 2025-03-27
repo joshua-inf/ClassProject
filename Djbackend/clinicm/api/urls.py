@@ -15,5 +15,8 @@ urlpatterns = [
     # Visits
     path('visits/', visit_list, name='visit-list'),
     path('visits-detail/<int:pk>/', visit_detail, name='visit-detail'),
+    
+    #statistical
+    path('statistics/', statistics_view, name="statistics"),
 ]
 
