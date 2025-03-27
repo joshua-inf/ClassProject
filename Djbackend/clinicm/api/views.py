@@ -6,9 +6,9 @@ from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout
 from .serializers import (UserRegistrationSerializer,UserLoginSerializer,PatientSerializer, ClinicianSerializer, VisitSerializer, VitalSerializer, 
-    MedicalHistorySerializer, DiagnosisSerializer, PrescriptionSerializer, 
-    TestSerializer, FollowUpSerializer)
-from .models import CustomUser, Patient, Clinician, Test, Vital, Visit, FollowUp, MedicalHistory,Prescription
+     DiagnosisSerializer, PrescriptionSerializer, 
+    TestSerializer)
+from .models import CustomUser, Patient, Clinician, Test, Vital, Visit, Prescription
 from rest_framework import status
 from django.db.models import Q
 

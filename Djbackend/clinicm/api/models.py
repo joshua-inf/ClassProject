@@ -54,18 +54,17 @@ class Clinician(models.Model): #
 
 class Visit(models.Model):
     VISIT_TYPE_CHOICES = [
-        ('Routine', 'Routine'),
+        ('Normal', 'Normal'),
         ('Emergency', 'Emergency'),
-        ('Follow-up', 'Follow-up'),
+        
     ]
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="visits")
     clinician = models.ForeignKey(Clinician, on_delete=models.SET_NULL, null=True, blank=True, related_name="visits")
-    visit_date = models.DateTimeField()
     visit_type = models.CharField(max_length=50, choices=VISIT_TYPE_CHOICES)
     reason_for_visit = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    
 
     def __str__(self):
         return f"Visit {self.id} - {self.patient.first_name} {self.patient.last_name}"
@@ -86,17 +85,6 @@ class Vital(models.Model):
         return f"Vitals for Visit {self.visit.id}"
 
 
-class MedicalHistory(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="medical_history")
-    chronic_conditions = models.TextField(blank=True, null=True)
-    allergies = models.TextField(blank=True, null=True)
-    current_medications = models.TextField(blank=True, null=True)
-    surgeries = models.TextField(blank=True, null=True)
-    family_history = models.TextField(blank=True, null=True)
-    social_history = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Medical History for {self.patient.first_name} {self.patient.last_name}"
 
 
 class Diagnosis(models.Model):
@@ -141,10 +129,3 @@ class Test(models.Model):
         return f"Test {self.test_name} for Visit {self.visit.id}"
 
 
-class FollowUp(models.Model):
-    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, related_name="followups")
-    followup_date = models.DateTimeField()
-    doctor_notes = models.TextField()
-
-    def __str__(self):
-        return f"Follow-up for Visit {self.visit.id}"

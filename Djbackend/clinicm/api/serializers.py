@@ -3,7 +3,7 @@
 #for easy interaction with api
 from rest_framework import serializers
 from django.contrib.auth import authenticate #checks if user is authenticated the grants access
-from .models import CustomUser, Patient, Clinician, Visit, Vital, MedicalHistory, Diagnosis, Prescription, Test, FollowUp
+from .models import CustomUser, Patient, Clinician, Visit, Vital, Diagnosis, Prescription, Test
 
 #for user registration
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -28,11 +28,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
    # {
    # "username": "username",
    # "StudentId": "33342",
-   # "password": "jsmjsnnc",
+   # "password": "jsmjsnnc", 
    # "first_name": "zed",
    # "last_name": "surname"
    #}
-
+ 
 
 
 #login serializer 
@@ -78,12 +78,6 @@ class VitalSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class MedicalHistorySerializer(serializers.ModelSerializer):
-    patient = PatientSerializer(read_only=True)
-
-    class Meta:
-        model = MedicalHistory
-        fields = '__all__'
 
 
 class DiagnosisSerializer(serializers.ModelSerializer):
@@ -110,10 +104,4 @@ class TestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FollowUpSerializer(serializers.ModelSerializer):
-    visit = VisitSerializer(read_only=True)
-
-    class Meta:
-        model = FollowUp
-        fields = '__all__'
 

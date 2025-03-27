@@ -6,7 +6,7 @@ urlpatterns = [
   path("login/", user_login, name="login"),
   # Patients
     path('patients/', patient_list, name='patient-list'),
-    path('patients/<int:pk>/', patient_detail, name='patient-detail'),
+    path('patient/<int:pk>/', patient_detail, name='patient-detail'),
 
     # Doctors
     path('clinicians/', Clinician_list, name='doctor-list'),
