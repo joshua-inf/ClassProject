@@ -5,6 +5,7 @@ import "./NavigationLayout.css";
 import { usePathname, useRouter } from "next/navigation";
 import Link from 'next/link'
 import { BsBell } from "react-icons/bs";
+import { FaUserGroup } from "react-icons/fa6";
 interface NavigationLayoutProps {
   children: React.ReactNode;
 }
@@ -71,8 +72,9 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
           <div className="flex flex-col space-y-6">
             <div className="space-y-1">
               <SidebarNavLink href="/" icon={FaHome}>Dashboard</SidebarNavLink>
-              {/* <SidebarNavLink href="/StudentInformation" icon={FaUser}> Student Information </SidebarNavLink>
-              <SidebarNavLink href="/Appointments" icon={FaCalendarCheck}> Appointments </SidebarNavLink>
+              <SidebarNavLink href="/stuff" icon={FaUser}> stuff </SidebarNavLink>
+              <SidebarNavLink href="/patients" icon={FaUserGroup}> patients </SidebarNavLink>
+              {/* <SidebarNavLink href="/Appointments" icon={FaCalendarCheck}> Appointments </SidebarNavLink>
               <SidebarNavLink href="/Performance/Efficiency" icon={FaCog}> Performance/Efficiency </SidebarNavLink>
               <SidebarNavLink href="/Insights" icon={FaDollarSign}>  Insights </SidebarNavLink> */}
             </div>
@@ -111,16 +113,7 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
               </button>
             </div>
             <div className="flex items-center w-full justify-end space-x-4">
-              <div className="relative w-50">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <FaSearch className="text-gray-500" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full pl-10 pr-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                />
-              </div>
+             
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gray-300  flex items-center justify-center transition-colors duration-200 cursor-pointer hover:bg-gray-200 ">
                   <BsBell className="text-gray-500 " />
