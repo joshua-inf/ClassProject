@@ -3,10 +3,25 @@
 #for easy interaction with api
 from rest_framework import serializers
 from django.contrib.auth import authenticate #checks if user is authenticated the grants access
-from .models import CustomUser, Patient, Clinician, Visit, Vital, Diagnosis, Prescription, Test
+from .models import CustomUser, Patient, Visit, Vital, Diagnosis, Prescription, Test
+from django.contrib.auth import get_user_model
 
 #for user registration
-class UserRegistrationSerializer(serializers.ModelSerializer):
+
+class ClinicianRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=6)
+
+    class Meta:
+        model = CustomUser  # This points to the CustomUser model
+        fields = ['username', 'first_name', 'last_name', 'email', 'specialty', 'phone_number', 'password']
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = CustomUser.objects.create_user(**validated_data)  # Create a user with the password hash
+        user.set_password(password)
+        user.save()
+        return user
+'''class ClinicianRegistrationSerializer(serializers.ModelSerializer):
     password=serializers.CharField(write_only=True)#accepts user data but not include in reponse for security
 
 
@@ -23,21 +38,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', ''),
             
         )
-        return user
-    #json test payload
-   # {
-   # "username": "username",
-   # "StudentId": "33342",
-   # "password": "jsmjsnnc", 
-   # "first_name": "zed",
-   # "last_name": "surname"
-   #}
+        return user'''
+ 
  
 
 
 #login serializer 
 # For user login
-class UserLoginSerializer(serializers.Serializer):  # Inherit from serializers.Serializer since its not using a model
+'''class UserLoginSerializer(serializers.Serializer):  # Inherit from serializers.Serializer since its not using a model
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
@@ -45,7 +53,16 @@ class UserLoginSerializer(serializers.Serializer):  # Inherit from serializers.S
         user = authenticate(username=data["username"], password=data["password"])
         if user and user.is_active:
             return user
-        raise serializers.ValidationError("Invalid username or password")
+        raise serializers.ValidationError("Invalid username or password")'''
+class ClinicianLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        user = authenticate(email=data['email'], password=data['password'])
+        if not user:
+            raise serializers.ValidationError("Invalid credentials")
+        return user
 
 
 
@@ -55,15 +72,15 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ClinicianSerializer(serializers.ModelSerializer):
+'''class ClinicianSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Clinician
-        fields = '__all__'
+        model = ''
+        fields = '__all__' '''
 
 
 class VisitSerializer(serializers.ModelSerializer):
     patient = PatientSerializer(read_only=True)  # Nested serialization
-    clinician = ClinicianSerializer(read_only=True)
+    #clinician = ClinicianSerializer(read_only=True)
 
     class Meta:
         model = Visit

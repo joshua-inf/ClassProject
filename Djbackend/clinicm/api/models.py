@@ -3,12 +3,13 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 # inheriting from Abstract user because we want to customize already exiting fields of user model
+
 class CustomUser(AbstractUser):
-    StudentId=models.CharField(max_length=20, unique=True)
-    
+    specialty = models.CharField(max_length=100, null=False, default="user")
+    phone_number = models.CharField(max_length=20, null=True,default='')
     
     def __str__(self):
-        return self.StudentId
+        return self.username
 
 class Patient(models.Model):
     GENDER_CHOICES = [
@@ -36,20 +37,16 @@ class Patient(models.Model):
     
 
 
-class Clinician(models.Model): #
-    POSITION= [
-        ('doctor', 'doctor'),
-        ('nurse', 'nurse'),
-        ('clinic officer', 'clinical officer'),
-    ]
+'''class Clinician(models.Model): #
+  
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    specialty = models.CharField(max_length=100,choices=POSITION)
+    specialty = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
 
     def __str__(self):
-        return f"Dr. {self.first_name} {self.last_name} - {self.specialty}"
+        return f"Dr. {self.first_name} {self.last_name} - {self.specialty}" '''
 
 
 class Visit(models.Model):
@@ -60,7 +57,7 @@ class Visit(models.Model):
     ]
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="visits")
-    clinician = models.ForeignKey(Clinician, on_delete=models.SET_NULL, null=True, blank=True, related_name="visits")
+    clinician = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="visits")
     visit_type = models.CharField(max_length=50, choices=VISIT_TYPE_CHOICES)
     reason_for_visit = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
