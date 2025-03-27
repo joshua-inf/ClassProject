@@ -5,15 +5,27 @@ from rest_framework import status
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout
-from .serializers import (UserRegistrationSerializer,UserLoginSerializer,PatientSerializer, ClinicianSerializer, VisitSerializer, VitalSerializer, 
-    MedicalHistorySerializer, DiagnosisSerializer, PrescriptionSerializer, 
-    TestSerializer, FollowUpSerializer)
-from .models import CustomUser, Patient, Clinician, Test, Vital, Visit, FollowUp, MedicalHistory,Prescription
+from .serializers import (ClinicianRegistrationSerializer,ClinicianLoginSerializer,PatientSerializer, VisitSerializer, VitalSerializer, 
+     DiagnosisSerializer, PrescriptionSerializer, 
+    TestSerializer)
+from .models import CustomUser, Patient, Test, Vital, Visit, Prescription
 from rest_framework import status
+from django.db.models import Q
 
 # user Registration View
+
 @api_view(['POST'])
-def user_register(request):
+#@permission_classes([AllowAny])  # Allow any user to register
+def register_clinician(request):
+    """ Register a new clinician """
+    serializer = ClinicianRegistrationSerializer(data=request.data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Clinician registered successfully!"}, status=201)
+    
+    return Response(serializer.errors, status=400)
+'''def user_register(request):
     if request.method == 'POST':
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -29,10 +41,22 @@ def user_register(request):
     "last_name": "Doe",
     "StudentId": "ST12345678"
 }
-"""
+'''
 
 # User Login View
 @api_view(['POST'])
+def login_clinician(request):
+    """ Log in clinician and return authentication token """
+    serializer = ClinicianLoginSerializer(data=request.data)
+
+    if serializer.is_valid():
+        user = serializer.validated_data
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"token": token.key})
+    
+    return Response({"error": "Invalid credentials"}, status=400)
+
+'''@api_view(['POST'])
 def user_login(request):
     if request.method == 'POST': #check if the request is a post request 
         serializer = UserLoginSerializer(data=request.data) #get data passed from the request  body
@@ -44,7 +68,7 @@ def user_login(request):
             #for securing the endpoints  and ensuere that only authenticated user can access certain resources
 
             return Response({'token': token.key}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
 
 # User Delete view
 
@@ -55,6 +79,25 @@ def user_login(request):
 @api_view(['GET', 'POST'])
 def patient_list(request):
     if request.method == 'GET':
+        # Get search parameters from query params
+        student_id = request.query_params.get('student_id', None)
+        name = request.query_params.get('name', None)
+
+        # Start with all patients
+        patients = Patient.objects.all()
+
+        # Filter by student_id if provided
+        if student_id:
+            patients = patients.filter(customuser__StudentId__icontains=student_id)
+
+        # Filter by name if provided (search first name or last name)
+        if name:
+            patients = patients.filter(
+                Q(first_name__icontains=name) | Q(last_name__icontains=name)
+            )
+        #Q object in Django is used to build complex queries for filtering data. It allows you
+        #  to combine multiple conditions with AND, OR, and NOT operators, 
+        # and it enables you to perform more advanced filtering, like searching multiple fields at once.
         patients = Patient.objects.all()
         serializer = PatientSerializer(patients, many=True)
         return Response(serializer.data)

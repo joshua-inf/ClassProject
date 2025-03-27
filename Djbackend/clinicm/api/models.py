@@ -3,12 +3,13 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 # inheriting from Abstract user because we want to customize already exiting fields of user model
+
 class CustomUser(AbstractUser):
-    StudentId=models.CharField(max_length=20, unique=True)
-    
+    specialty = models.CharField(max_length=100, null=False, default="user")
+    phone_number = models.CharField(max_length=20, null=True,default='')
     
     def __str__(self):
-        return self.StudentId
+        return self.username
 
 class Patient(models.Model):
     GENDER_CHOICES = [
@@ -28,7 +29,7 @@ class Patient(models.Model):
     emergency_contact_phone = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    customuser=models.ForeignKey(CustomUser, on_delete=models.CASCADE , null=True, blank=True)
+    customuser=models.ForeignKey(CustomUser, on_delete=models.CASCADE )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -36,36 +37,31 @@ class Patient(models.Model):
     
 
 
-class Clinician(models.Model): #
-    POSITION= [
-        ('doctor', 'doctor'),
-        ('nurse', 'nurse'),
-        ('clinic officer', 'clinical officer'),
-    ]
+'''class Clinician(models.Model): #
+  
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    specialty = models.CharField(max_length=100,choices=POSITION)
+    specialty = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
 
     def __str__(self):
-        return f"Dr. {self.first_name} {self.last_name} - {self.specialty}"
+        return f"Dr. {self.first_name} {self.last_name} - {self.specialty}" '''
 
 
 class Visit(models.Model):
     VISIT_TYPE_CHOICES = [
-        ('Routine', 'Routine'),
+        ('Normal', 'Normal'),
         ('Emergency', 'Emergency'),
-        ('Follow-up', 'Follow-up'),
+        
     ]
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="visits")
-    clinician = models.ForeignKey(Clinician, on_delete=models.SET_NULL, null=True, blank=True, related_name="visits")
-    visit_date = models.DateTimeField()
+    clinician = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="visits")
     visit_type = models.CharField(max_length=50, choices=VISIT_TYPE_CHOICES)
     reason_for_visit = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    
 
     def __str__(self):
         return f"Visit {self.id} - {self.patient.first_name} {self.patient.last_name}"
@@ -86,17 +82,6 @@ class Vital(models.Model):
         return f"Vitals for Visit {self.visit.id}"
 
 
-class MedicalHistory(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="medical_history")
-    chronic_conditions = models.TextField(blank=True, null=True)
-    allergies = models.TextField(blank=True, null=True)
-    current_medications = models.TextField(blank=True, null=True)
-    surgeries = models.TextField(blank=True, null=True)
-    family_history = models.TextField(blank=True, null=True)
-    social_history = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Medical History for {self.patient.first_name} {self.patient.last_name}"
 
 
 class Diagnosis(models.Model):
@@ -141,10 +126,3 @@ class Test(models.Model):
         return f"Test {self.test_name} for Visit {self.visit.id}"
 
 
-class FollowUp(models.Model):
-    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, related_name="followups")
-    followup_date = models.DateTimeField()
-    doctor_notes = models.TextField()
-
-    def __str__(self):
-        return f"Follow-up for Visit {self.visit.id}"

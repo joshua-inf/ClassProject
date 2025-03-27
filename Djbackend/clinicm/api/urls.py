@@ -2,11 +2,11 @@ from django.urls import path
 from .views import*
 urlpatterns = [
     #registration, login
-  path("register/",user_register, name="register"), 
-  path("login/", user_login, name="login"),
+  path("register-clinician/",register_clinician, name="register"), 
+  path("login-clinician/", login_clinician, name="login"),
   # Patients
-    path('api/patients/', patient_list, name='patient-list'),
-    path('api/patients/<int:pk>/', patient_detail, name='patient-detail'),
+    path('patients/', patient_list, name='patient-list'),
+    path('patient/<int:pk>/', patient_detail, name='patient-detail'),
 
     # Doctors
     path('clinicians/', Clinician_list, name='doctor-list'),
