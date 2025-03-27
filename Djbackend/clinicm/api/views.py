@@ -2,12 +2,13 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout
 from .serializers import (UserRegistrationSerializer,UserLoginSerializer,PatientSerializer, ClinicianSerializer, VisitSerializer, VitalSerializer, 
     MedicalHistorySerializer, DiagnosisSerializer, PrescriptionSerializer, 
     TestSerializer, FollowUpSerializer)
-from .models import CustomUser, Patient, Clinician, Test, Vital, Visit, FollowUp, MedicalHistory
+from .models import CustomUser, Patient, Clinician, Test, Vital, Visit, FollowUp, MedicalHistory,Prescription
 from rest_framework import status
 
 # user Registration View
@@ -19,6 +20,16 @@ def user_register(request):
             user = serializer.save()
             return Response({'message': 'user successfully registered'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    """ {
+    "username": "john_doe",
+    "password": "SecurePass123!",
+    "password2": "SecurePass123!",
+    "email": "john.doe@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "StudentId": "ST12345678"
+}
+"""
 
 # User Login View
 @api_view(['POST'])
@@ -160,5 +171,13 @@ def visit_detail(request, pk):
 #medical view api
 
 
-
+#Stats
+@api_view(['GET'])
+def statistics_view(request):
+    data = {
+        "total_patients": Patient.objects.count(),
+        "total_visits": Visit.objects.count(),
+        "total_prescriptions": Prescription.objects.count(),
+    }
+    return Response(data)
 
