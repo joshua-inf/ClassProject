@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from 'next/link'
 import { BsBell } from "react-icons/bs";
 import { FaUserGroup } from "react-icons/fa6";
-import { removeToken } from "@/lib";
+import { getUserRole, removeToken } from "@/lib";
 interface NavigationLayoutProps {
   children: React.ReactNode;
 }
@@ -19,6 +19,8 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [sidenav, setSidenav] = useState(false);
   const [mobileNav, setMobileNav] = useState(false)
+
+  const role = getUserRole()
 
 
   const SidebarNavLink = ({ href, children, icon: Icon }: { href: string, children: React.ReactNode, icon: any }) => {
@@ -73,7 +75,12 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
           <div className="flex flex-col space-y-6">
             <div className="space-y-1">
               <SidebarNavLink href="/" icon={FaHome}>Dashboard</SidebarNavLink>
-              <SidebarNavLink href="/stuff" icon={FaUser}> stuff </SidebarNavLink>
+              {
+                role == 'doctor'?
+                <SidebarNavLink href="/stuff" icon={FaUser}> stuff </SidebarNavLink>
+                :
+                <></>
+              }
               <SidebarNavLink href="/patients" icon={FaUserGroup}> patients </SidebarNavLink>
               {/* <SidebarNavLink href="/Appointments" icon={FaCalendarCheck}> Appointments </SidebarNavLink>
               <SidebarNavLink href="/Performance/Efficiency" icon={FaCog}> Performance/Efficiency </SidebarNavLink>
