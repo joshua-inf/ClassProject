@@ -5,15 +5,17 @@ import React, { FormEvent, use, useEffect, useState } from 'react'
 
 export const StuffPage = () => {
     const [loading, setLoading] = useState(false)
+    const [loading2, setLoading2] = useState(false)
     const [clinicianData, setClinicianData] = useState<Clinician[]>([])
     const [popup, setPopup] = useState(false)
+    const [success, setSuccess] = useState(false)
 
-    const [first_name, setFirstname] = useState<string | null>(null)
-    const [last_name, setLastName] = useState<string | null>(null)
-    const [email, setEmail] = useState<string | null>(null)
-    const [position, setPosition] = useState<string | null>(null)
-    const [phonenummber, setPhoneNumber] = useState<number | null>(null)
-    const [passwprd, setPasswprd] = useState<string | null>(null)
+    const [first_name, setFirstname] = useState<string>('')
+    const [last_name, setLastName] = useState<string>('')
+    const [email, setEmail] = useState<string>('')
+    const [position, setPosition] = useState<string>('')
+    const [phonenummber, setPhoneNumber] = useState<string>('')
+    const [passwprd, setPasswprd] = useState<string>('')
 
 
     // function to get data from api
@@ -25,6 +27,7 @@ export const StuffPage = () => {
                 if (res.data) {
                     console.log("success: ", res.data)
                     setClinicianData(res.data)
+                    setSuccess(true)
                 }
             })
             .catch((err) => {
@@ -34,25 +37,42 @@ export const StuffPage = () => {
                 setLoading(false)
             })
     }
-        
-    const clearField = () => {
 
+    const clearField = () => {
+        setPasswprd('')
+        setLastName('')
+        setFirstname('')
+        setEmail('')
+        setPhoneNumber('')
+        setPosition('')
     }
 
     const addStuff = (e: React.FormEvent<HTMLFormElement>) => {
+        setLoading2(true)
         e.preventDefault();
-        console.log(
-            {
-                username: `${first_name}_${last_name}`,
-                first_name: first_name,
-                last_name: last_name,
-                email: email,
-                specialty: position,
-                phone_number: phonenummber,
-                password: passwprd
-
-            }
-        )
+        axios.post('http://localhost:8000/api/register-clinician/', {
+            username: `${first_name}_${last_name}`,
+            first_name: first_name,
+            last_name: last_name,
+            email: email,
+            specialty: position,
+            phone_number: phonenummber,
+            password: passwprd
+        })
+            .then((res) => {
+                if (res.data) {
+                    console.log("success: ", res.data)
+                    setPopup(false)
+                    getClinicianData()
+                    clearField()
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading2(false)
+            })
     };
 
     useEffect(() => {
@@ -63,109 +83,132 @@ export const StuffPage = () => {
     return (
         <>
             {
-                popup ?
-                    <div className='fixed top-0 flex left-0 justify-center items-center bottom-0 w-full z-[999]'>
-                        <div className='absolute top-0 left-0 bottom-0 w-full  bg-[#00000050] '>
+                popup && (
+                    <>
+                        <div className='fixed top-0 flex left-0 justify-center  bg-[#00000050]  items-center bottom-0 w-full z-[999]'>
+                            {
+                                loading2 ?
+                                    <div className='flex justify-center items-center'>
+                                        <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
+                                    </div>
+                                    :
+                                    <div className='bg-white md:w-1/2 w-3/4 rounded-md  absolute p-4 z-[9999]'>
+                                        <form onSubmit={addStuff} className="text-sm space-y-5">
+                                            {
+                                                success ?
+                                                    <div className='text-green-600'>
+                                                        Successfully added
+                                                    </div>
+                                                    :
+                                                    <></>
+                                            }
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-600">First name</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="firstname"
+                                                        onChange={(e: any) => setFirstname(e.target.value)}
+                                                        value={first_name}
+                                                        type="text"
+                                                        required
+                                                        placeholder="Add first name here"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-600">Last name</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="lastname"
+                                                        onChange={(e: any) => setLastName(e.target.value)}
+                                                        value={last_name}
+                                                        type="text"
+                                                        required
+                                                        placeholder="Add last name here"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-600">Specialty</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <select onChange={(e: any) => setPosition(e.target.value)} name="position" className="p-2 w-full text-gray-600 outline-none">
+                                                        <option value="">Select a role</option>
+                                                        <option value="doctor">Doctor</option>
+                                                        <option value="nurse">Nurse</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-600">Phone number</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="phonenumber"
+                                                        type="text" // Changed to "text" since maxLength doesn't work with "number"
+                                                        maxLength={12} // Works now
+                                                        value={phonenummber} // Fixed variable name
+                                                        onChange={(e) => {
+                                                            const input = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+                                                            if (input.length <= 12) setPhoneNumber(input);
+                                                        }}
+                                                        required
+                                                        placeholder="Add phone number here"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-600">Email</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="email"
+                                                        type="email"
+                                                        value={email}
+                                                        onChange={(e: any) => setEmail(e.target.value)}
+                                                        required
+                                                        placeholder="Add email here"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col">
+                                                <label className="text-gray-600">Password</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="password"
+                                                        type="password"
+                                                        value={passwprd}
+                                                        onChange={(e: any) => setPasswprd(e.target.value)}
+                                                        required
+                                                        placeholder="Add email here"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex gap-3">
+                                                <button type="submit" className="grow bg-green-600 p-2 rounded-md text-white">
+                                                    Save
+                                                </button>
+                                                <button onClick={() => { setPopup(false); clearField() }} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                            }
                         </div>
-                        <div className='bg-white md:w-1/2 w-3/4 rounded-md  absolute p-4 z-[9999]'>
-                            <form onSubmit={addStuff} className="text-sm space-y-5">
-                                <div className="flex flex-col">
-                                    <label className="text-gray-600">First name</label>
-                                    <div className="border border-gray-300 rounded-lg">
-                                        <input
-                                            name="firstname"
-                                            onChange={(e: any) => setFirstname(e.target.value)}
-                                            type="text"
-                                            required
-                                            placeholder="Add first name here"
-                                            className="p-2 w-full text-gray-600 outline-none"
-                                        />
-                                    </div>
-                                </div>
 
-                                <div className="flex flex-col">
-                                    <label className="text-gray-600">Last name</label>
-                                    <div className="border border-gray-300 rounded-lg">
-                                        <input
-                                            name="lastname"
-                                            onChange={(e: any) => setLastName(e.target.value)}
-                                            type="text"
-                                            required
-                                            placeholder="Add last name here"
-                                            className="p-2 w-full text-gray-600 outline-none"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <label className="text-gray-600">Specialty</label>
-                                    <div className="border border-gray-300 rounded-lg">
-                                        <select onChange={(e: any) => setPosition(e.target.value)} name="position" className="p-2 w-full text-gray-600 outline-none">
-                                            <option value="">Select a role</option>
-                                            <option value="doctor">Doctor</option>
-                                            <option value="nurse">Nurse</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <label className="text-gray-600">Phone number</label>
-                                    <div className="border border-gray-300 rounded-lg">
-                                        <input
-                                            name="phonenumber"
-                                            type="number"
-                                            maxLength={12}
-                                            onChange={(e: any) => setPhoneNumber(e.target.value)}
-                                            required
-                                            placeholder="Add phone number here"
-                                            className="p-2 w-full text-gray-600 outline-none"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <label className="text-gray-600">Email</label>
-                                    <div className="border border-gray-300 rounded-lg">
-                                        <input
-                                            name="email"
-                                            type="email"
-                                            onChange={(e: any) => setEmail(e.target.value)}
-                                            required
-                                            placeholder="Add email here"
-                                            className="p-2 w-full text-gray-600 outline-none"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col">
-                                    <label className="text-gray-600">Password</label>
-                                    <div className="border border-gray-300 rounded-lg">
-                                        <input
-                                            name="password"
-                                            type="password"
-                                            onChange={(e: any) => setPasswprd(e.target.value)}
-                                            required
-                                            placeholder="Add email here"
-                                            className="p-2 w-full text-gray-600 outline-none"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-3">
-                                    <button type="submit" className="grow bg-green-600 p-2 rounded-md text-white">
-                                        Save
-                                    </button>
-                                    <button onClick={()=> setPopup(false)} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    :
-                    <></>
-
+                    </>
+                )
             }
+
             <div className='flex flex-col gap-5 p-5'>
                 <div className='text-center font-bold text-2xl'>
                     List of stuff members

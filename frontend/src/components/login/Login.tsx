@@ -1,4 +1,5 @@
 'use client'
+import { createCookie } from '@/lib';
 import { TextField } from '@mui/material'
 import axios from 'axios'
 import { useRouter } from 'next/navigation';
@@ -17,10 +18,12 @@ export const LoginPage = () => {
         const data = Object.fromEntries(formData.entries());
         // console.log({ email: data.email, password: data.password });
 
-        axios.post('http://localhost:5000/login', { email: data.email, password: data.password })
+        axios.post('http://localhost:8000/api/login-clinician/', { email: data.email, password: data.password })
             .then((res) => {
                 if (res.data) {
-                    console.log(res)
+                    console.log(res.data.token)
+                    createCookie(res.data.token, res.data.user, res.data.role)
+                    router.push('/')
                 }
             }).
             catch((error) => {
@@ -29,8 +32,6 @@ export const LoginPage = () => {
             .finally(() => {
                 setLoading(false)
             })
-
-            router.push('/')
     }
     return (
         <div>
