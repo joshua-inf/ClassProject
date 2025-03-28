@@ -20,5 +20,9 @@ urlpatterns = [
     #statistical
     path('statistics/', statistics_view, name="statistics"),
 
+    #prescriptions
+    path('prescriptions/', prescription_list, name='prescription_list'),
+    path('prescriptions/<int:pk>/', prescription_detail, name='prescription_detail'),
+
 ]
 

@@ -106,25 +106,34 @@ def get_user_count(request):
 def patient_list(request):
     if request.method == 'GET':
         # Get search parameters from query params
-        student_id = request.query_params.get('student_id', None)
+        # Get search parameters from query params
+        patient_id = request.query_params.get('patient_id', None)
         name = request.query_params.get('name', None)
+        phone_number = request.query_params.get('phone_number', None)
+        email = request.query_params.get('email', None)
 
         # Start with all patients
         patients = Patient.objects.all()
 
         # Filter by student_id if provided
-        if student_id:
-            patients = patients.filter(customuser__StudentId__icontains=student_id)
+        if patient_id:
+            patients = patients.filter(id__exact=patient_id)
+
+        if phone_number:
+            patients = patients.filter(phone_number__icontains=phone_number)
 
         # Filter by name if provided (search first name or last name)
         if name:
             patients = patients.filter(
                 Q(first_name__icontains=name) | Q(last_name__icontains=name)
             )
+        #filter by email
+        if email:
+            patients = patients.filter(email__iexact=email)
         #Q object in Django is used to build complex queries for filtering data. It allows you
         #  to combine multiple conditions with AND, OR, and NOT operators, 
         # and it enables you to perform more advanced filtering, like searching multiple fields at once.
-        patients = Patient.objects.all()
+        
         serializer = PatientSerializer(patients, many=True)
         return Response(serializer.data)
 
@@ -250,3 +259,41 @@ def statistics_view(request):
     }
     return Response(data)
 
+
+
+@api_view(['GET', 'POST'])
+def prescription_list(request):
+    if request.method == 'GET':
+        prescriptions = Prescription.objects.all()
+        serializer = PrescriptionSerializer(prescriptions, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = PrescriptionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Retrieve, Update, or Delete a specific prescription
+@api_view(['GET', 'PUT', 'DELETE'])
+def prescription_detail(request, pk):
+    try:
+        prescription = Prescription.objects.get(pk=pk)
+    except Prescription.DoesNotExist:
+        return Response({'error': 'Prescription not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = PrescriptionSerializer(prescription)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = PrescriptionSerializer(prescription, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        prescription.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

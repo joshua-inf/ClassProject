@@ -94,15 +94,6 @@ class VisitSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class VitalSerializer(serializers.ModelSerializer):
-    visit = VisitSerializer(read_only=True)
-
-    class Meta:
-        model = Vital
-        fields = '__all__'
-
-
-
 
 class DiagnosisSerializer(serializers.ModelSerializer):
     visit = VisitSerializer(read_only=True)
@@ -120,12 +111,8 @@ class PrescriptionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TestSerializer(serializers.ModelSerializer):
-    visit = VisitSerializer(read_only=True)
 
-    class Meta:
-        model = Test
-        fields = '__all__'
+
 
 
 
