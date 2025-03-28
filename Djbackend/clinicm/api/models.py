@@ -52,14 +52,14 @@ class Patient(models.Model):
     ]
 
 
-    patient= models.CharField(max_length=10, unique=True, primary_key=True, editable=False)
+    patient_id= models.CharField(max_length=10, unique=True, primary_key=True, editable=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     dob = models.DateField()
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     phone_number = models.CharField(max_length=20)
     email = models.EmailField(unique=True, null=True, blank=True)
-    Patient_type=models.CharField(max_length=200)
+    patient_type=models.CharField(max_length=200)
     address = models.TextField()
     emergency_contact_name = models.CharField(max_length=100, null=True)
     emergency_contact_phone = models.CharField(max_length=20, null=True)
