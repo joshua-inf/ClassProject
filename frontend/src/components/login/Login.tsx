@@ -52,7 +52,7 @@ export const LoginPage = () => {
 
                             <>
 
-                                <form onSubmit={(e) => LoginFunc(e)} className='flex text-gray-800  shadow-md  bg-transparent  p-5 rounded-md w-[full] min-w-[400px] flex-col gap-4'>
+                                <form onSubmit={(e) => LoginFunc(e)} className='flex bg-white  shadow-md  bg-transparent  p-5 rounded-md w-[full] min-w-[400px] flex-col gap-4'>
                                 <div className='flex flex-col gap-1 items-center'>
                                     <div className='text-2xl font-bold'>TMDb</div>
                                     <div  className='text-gray-800 '>login</div>
