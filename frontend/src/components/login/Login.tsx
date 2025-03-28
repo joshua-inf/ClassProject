@@ -22,7 +22,7 @@ export const LoginPage = () => {
             .then((res) => {
                 if (res.data) {
                     console.log(res.data.token)
-                    createCookie(res.data.token, res.data.user, res.data.role)
+                    createCookie(res.data.token, res.data.user, res.data.user.specialty)
                     router.push('/')
                 }
             }).
