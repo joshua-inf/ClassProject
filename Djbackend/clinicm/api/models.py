@@ -1,15 +1,39 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-# Create your models here.
+# models here.
 # inheriting from Abstract user because we want to customize already exiting fields of user model
 
+class CustomUserManager(BaseUserManager):
+    """ Custom user manager to use email as the unique identifier instead of username. """
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError("The Email field must be set")
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        return self.create_user(email, password, **extra_fields)
+
 class CustomUser(AbstractUser):
-    specialty = models.CharField(max_length=100, null=False, default="user")
-    phone_number = models.CharField(max_length=20, null=True,default='')
-    
+    username = None  # Remove username field
+    email = models.EmailField(unique=True)  # Use email as the unique identifier
+    specialty = models.CharField(max_length=100, choices=[('doctor', 'Doctor'), ('nurse', 'Nurse'), ('clinic officer', 'Clinical Officer')])
+    phone_number = models.CharField(max_length=20)
+
+    USERNAME_FIELD = 'email'  # Set email as the unique identifier
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    objects = CustomUserManager()  # Use the custom manager
+
     def __str__(self):
-        return self.username
+        return self.email
+
 
 class Patient(models.Model):
     GENDER_CHOICES = [

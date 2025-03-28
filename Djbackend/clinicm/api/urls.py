@@ -1,9 +1,10 @@
 from django.urls import path
 from .views import*
 urlpatterns = [
-    #registration, login
+    #registration, login, numberof users
   path("register-clinician/",register_clinician, name="register"), 
   path("login-clinician/", login_clinician, name="login"),
+  path('api/user-count/', get_user_count, name='get-user-count'),
   # Patients
     path('patients/', patient_list, name='patient-list'),
     path('patient/<int:pk>/', patient_detail, name='patient-detail'),
@@ -18,5 +19,6 @@ urlpatterns = [
     
     #statistical
     path('statistics/', statistics_view, name="statistics"),
+
 ]
 

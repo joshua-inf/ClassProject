@@ -22,7 +22,7 @@ class ClinicianRegistrationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 '''class ClinicianRegistrationSerializer(serializers.ModelSerializer):
-    password=serializers.CharField(write_only=True)#accepts user data but not include in reponse for security
+    password=serializers.CharField(write_only=True)#accepts user data but not include in response for security
 
 
     class Meta:
@@ -54,14 +54,21 @@ class ClinicianRegistrationSerializer(serializers.ModelSerializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Invalid username or password")'''
+
 class ClinicianLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    password = serializers.CharField()
+    password = serializers.CharField(write_only=True)#for data being passed not to be seen 
 
     def validate(self, data):
-        user = authenticate(email=data['email'], password=data['password'])
+        
+        email = data.get("email")
+        password = data.get("password")
+
+        # Authenticate user
+        user = authenticate(username=email, password=password)  # Use email as username
         if not user:
-            raise serializers.ValidationError("Invalid credentials")
+            raise serializers.ValidationError("Invalid email or password")
+        
         return user
 
 
