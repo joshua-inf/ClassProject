@@ -1,3 +1,4 @@
+'use client'
 import { Clinician } from '@/modals/clinicians'
 import { PlusIcon } from '@heroicons/react/16/solid'
 import axios from 'axios'
@@ -22,12 +23,13 @@ export const StuffPage = () => {
     const getClinicianData = () => {
         console.log("getting data")
         setLoading(true)
-        axios.get('http://localhost:8000/api/clinicians')
+        axios.get('http://localhost:8000/api/api/user-count/')
             .then((res) => {
                 if (res.data) {
-                    console.log("success: ", res.data)
-                    setClinicianData(res.data)
+                    console.log("success: ", res.data.users)
+                    setClinicianData(res.data.users)
                     setSuccess(true)
+                    getClinicianData()
                 }
             })
             .catch((err) => {
@@ -240,7 +242,6 @@ export const StuffPage = () => {
                                                 <th>position</th>
                                                 <th>email</th>
                                                 <th>phone number</th>
-                                                <th>actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -251,9 +252,6 @@ export const StuffPage = () => {
                                                     <td className='text-center'>{e.specialty}</td>
                                                     <td className='text-center'>{e.email}</td>
                                                     <td className='text-center'>{e.phone_number}</td>
-                                                    <td className='flex p-2 gap-2 justify-center'>
-                                                        <button className='bg-blue-600 py-2 px-3 text-sm flex  items-center gap-2 text-white rounded-md shadow-md '> <PlusIcon className='size-5' /> add members</button>
-                                                    </td>
                                                 </tr>
                                             )}
                                         </tbody>
