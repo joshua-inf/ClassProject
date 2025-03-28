@@ -96,7 +96,7 @@ export const StuffPage = () => {
                                         <form onSubmit={addStuff} className="text-sm space-y-5">
                                             {
                                                 success ?
-                                                    <div className='text-green-600'>
+                                                    <div className='text-green-600 text-center'>
                                                         Successfully added
                                                     </div>
                                                     :
