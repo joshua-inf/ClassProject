@@ -6,6 +6,7 @@ import { FaPeopleGroup, FaVirusCovid } from 'react-icons/fa6';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, Typography, useTheme, Stack, Box } from '@mui/material';
+import axios from 'axios';
 
 type DayData = {
     male: number;
@@ -16,8 +17,19 @@ type WeekData = {
     [key in 'Sat' | 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri']: DayData;
 };
 
+type Data = {
+    total_patients: number,
+    total_visits: number,
+    total_prescriptions: number
+}
+
 export const Dashboard = () => {
     const [loading, setLoading] = useState(true);
+    const [data, setData] = useState<Data>({
+        total_patients: 0,
+        total_visits: 0,
+        total_prescriptions: 0,
+    })
     const theme = useTheme();
 
     const admissionData: WeekData = {
@@ -29,6 +41,16 @@ export const Dashboard = () => {
         'Thu': { male: 380, female: 220 },
         'Fri': { male: 400, female: 320 },
     };
+
+    const fetchData = async () => {
+         axios.get('http://localhost:8000/api/statistics/')
+         .then((res) => {
+            setData(res.data)
+         })
+         .catch((err) => {
+            console.log(err)
+         })
+    }
 
     // Transform data for Recharts
     const chartData = Object.entries(admissionData).map(([day, data]) => ({
@@ -44,7 +66,7 @@ export const Dashboard = () => {
                     <IoPersonCircleOutline className='text-5xl bg-blue-500/50 rounded-full p-2' />
                     <div className='flex flex-col gap-1'>
                         <div className='text-sm text-[#718EBF]'>Total Patients</div>
-                        <div className='text-2xl font-bold'>1 000</div>
+                        <div className='text-2xl font-bold'>{data.total_patients}</div>
                     </div>
                </div>
 
@@ -52,7 +74,7 @@ export const Dashboard = () => {
                     <FaCalendarCheck className='text-5xl bg-green-500/50 rounded-full p-2' />
                     <div className='flex flex-col gap-1'>
                         <div className='text-sm text-[#718EBF]'>Total Visits</div>
-                        <div className='text-2xl font-bold'>2 500</div>
+                        <div className='text-2xl font-bold'>{data.total_visits}</div>
                     </div>
                </div>
 
@@ -60,15 +82,7 @@ export const Dashboard = () => {
                     <FaStethoscope className='text-5xl bg-purple-500/50 rounded-full p-2' />
                     <div className='flex flex-col gap-1'>
                         <div className='text-sm text-[#718EBF]'>Prescriptions</div>
-                        <div className='text-2xl font-bold'>1 250</div>
-                    </div>
-               </div>
-
-               <div className='flex hover:scale-105 transition-all duration-300 cursor-pointer grow gap-2 items-center'>
-                    <FaHeartbeat className='text-5xl bg-red-500/50 rounded-full p-2' />
-                    <div className='flex flex-col gap-1'>
-                        <div className='text-sm text-[#718EBF]'>Popular Cases</div>
-                        <div className='text-2xl font-bold'>Maleria</div>
+                        <div className='text-2xl font-bold'>{data.total_prescriptions}</div>
                     </div>
                </div>
             </div>

@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from 'next/link'
 import { BsBell } from "react-icons/bs";
 import { FaUserGroup } from "react-icons/fa6";
+import { removeToken } from "@/lib";
 interface NavigationLayoutProps {
   children: React.ReactNode;
 }
@@ -87,8 +88,8 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
           <div className="px-3 pt-6">
             <button
               onClick={() => {
+                removeToken()
                 navigation.push('/login')
-                // removeToken()
               }}
               className="w-full flex items-center justify-between px-4 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200"
             >
