@@ -19,8 +19,16 @@ def register_clinician(request):
     serializer = ClinicianRegistrationSerializer(data=request.data)
 
     if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Clinician registered successfully!"}, status=201)
+        user=serializer.save()
+        return Response({
+                'user': {
+                    'email': user.email,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'specialty': user.specialty,
+                    'phone_number': user.phone_number,
+                }
+            }, status=status.HTTP_201_CREATED)
     
     return Response(serializer.errors, status=400)
 '''
