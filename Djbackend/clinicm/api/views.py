@@ -295,4 +295,4 @@ def prescription_detail(request, pk):
 
     elif request.method == 'DELETE':
         prescription.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"prescription deleted"},status=status.HTTP_204_NO_CONTENT)

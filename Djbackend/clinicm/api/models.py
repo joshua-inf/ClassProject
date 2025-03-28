@@ -43,7 +43,7 @@ class Patient(models.Model):
     ]
 
 
-    patient_id = models.CharField(max_length=10, unique=True, primary_key=True, editable=False)
+    patient= models.CharField(max_length=10, unique=True, primary_key=True, editable=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     dob = models.DateField()
@@ -81,7 +81,6 @@ class Visit(models.Model):
         ('Emergency', 'Emergency'),
         
     ]
-
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="visits")
     clinician = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="visits")
     blood_pressure = models.CharField(max_length=20, )  # Example: "120/80"
@@ -96,8 +95,6 @@ class Visit(models.Model):
         return f"Visit {self.id} - {self.patient.first_name} {self.patient.last_name}"
     
     
-
-
 
 
 
