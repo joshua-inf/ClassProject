@@ -1,85 +1,144 @@
-'use client'
-import { visits } from '@/modals/visit';
-import Link from 'next/link';
-import React, { useState } from 'react'
-import { BiArrowBack } from 'react-icons/bi';
-import { FaUser } from 'react-icons/fa'
+    'use client'
+    import { visits } from '@/modals/visit';
+    import { Diagnosis } from '@/modals/Diagnosis';
+    import Link from 'next/link';
+    import React, { useState } from 'react'
+    import { BiArrowBack } from 'react-icons/bi';
+    import { FaUser } from 'react-icons/fa'
 
-export const PatientDetails = () => {
-    const [visits, setVisits] = useState<visits[]>([]);
-    return (
-        <div className='flex flex-col gap-5 p-5'>
-            <div className='flex justify-between '>
-                <Link href="/patients" className='bg-white items-center flex hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
-                    <BiArrowBack className='' />
-                </Link>
-                <button  className='bg-white hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
-                    Add visit
-                </button>
-            </div>
-            <div>
-                <div className='space-y-2'>
-                    <div className='flex grow-0 p-3 shadow-md rounded-md bg-white  cursor-pointer flex-col gap-2'>
-                        <div>
-                            User Details
-                        </div>
-                        <hr className='border-gray-300' />
-                        <div className='flex items-center gap-2'>
-                            <FaUser className='text-gray-500 size-10' />
-                            <div className='flex flex-col text-sm font-light'>
-                                <div>user name</div>
-                                <div>user id</div>
-                                <div>user email</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* visit history */}
-                    <div className='flex flex-col grow gap-2 shadow-md rounded-md bg-white p-3  cursor-pointer'>
-                        <div>
-                            Visit History
-                        </div>
-                        <hr className='border-gray-300' />
-                        {visits ?
-                            <div>
+    export const PatientDetails = () => {
+        const [visits, setVisits] = useState<visits[]>([]);
+        const [medicalHistory, setMedicalHistory] = useState(false)
+        const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
+        return (
+            <>
+                {/* user medical history */}
+                {
+                    medicalHistory && (
+                        <div className='fixed top-0 left-0 flex justify-center items-center w-full h-full bg-black bg-opacity-50 z-50'>
+                            <div className='bg-white md:w-1/2 w-3/4 p-5 flex flex-col gap-5  rounded-md'>
                                 <div>
-                                    <table className=' w-full '>
-                                        <thead>
-                                            <tr className=''>
-                                                <th className='px-3'>Visit Date</th>
-                                                <th className='px-3'>Visit Type</th>
-                                                <th className='px-3'>Reason for Visit</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    User Medical History
+                                    <hr className='border-gray-300' />
+                                </div>
+                                <div>
+                                    <div>
+                                        Visit details:
+                                    </div>
+                                    <div>
+                                        {diagnosis.map((diagnosis) => (
+                                            <div>
+                                                <i>
+                                                {diagnosis.diagnosis}
+                                                </i>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
 
-                                            {visits.map((visit) => (
-                                                <tr className=''>
-                                                    <td className='text-center text-white'>{visit.created_at}</td>
-                                                    <td className='text-center text-white'>{visit.visit_type}</td>
-                                                    <td className='text-center text-white'>{visit.visit_type}</td>
-                                                </tr>
-                                            ))}
-                                            <tr className=' bg-gray-100'>
-                                                <td className='text-center '>data</td>
-                                                <td className='text-center '>data</td>
-                                                <td className='text-center '>data</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div>
+                                    <div>
+                                        Diagnosis:
+                                    </div>
+                                    <div>
+                                        {diagnosis.map((diagnosis) => (
+                                            <div>
+                                                <i>
+                                                {diagnosis.diagnosis}
+                                                </i>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div>
+                                        Prescription:
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </div>
+                                <div>
+
+                                    <button onClick={() => setMedicalHistory(false)} className='bg-gray-200 w-full hover:scale-[1.01] transition-all duration-300 p-2 px-2 rounded-md'>close</button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                <div className='flex flex-col gap-5 p-5'>
+                    <div className='flex justify-between '>
+                        <Link href="/patients" className='bg-white items-center flex hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
+                            <BiArrowBack className='' />
+                        </Link>
+                        <button className='bg-white hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
+                            Add visit
+                        </button>
+                    </div>
+                    <div>
+                        <div className='space-y-2'>
+                            <div className='flex grow-0 p-3 shadow-md rounded-md bg-white  cursor-pointer flex-col gap-2'>
+                                <div>
+                                    User Details
+                                </div>
+                                <hr className='border-gray-300' />
+                                <div className='flex items-center gap-2'>
+                                    <FaUser className='text-gray-500 size-10' />
+                                    <div className='flex flex-col text-sm font-light'>
+                                        <div>user name</div>
+                                        <div>user id</div>
+                                        <div>user email</div>
+                                    </div>
                                 </div>
                             </div>
 
-                            :
-                            <>
-                                <div className='text-center text-gray-500'>
-                                    No visits yet
+                            {/* visit history */}
+                            <div className='flex flex-col grow gap-2 shadow-md rounded-md bg-white p-3  cursor-pointer'>
+                                <div>
+                                    Visit History
                                 </div>
-                            </>
-                        }
+                                <hr className='border-gray-300' />
+                                {visits ?
+                                    <div>
+                                        <div>
+                                            <table className=' w-full '>
+                                                <thead>
+                                                    <tr className=''>
+                                                        <th className='px-3'>Visit Date</th>
+                                                        <th className='px-3'>Visit Type</th>
+                                                        <th className='px-3'>Reason for Visit</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                    {visits.map((visit) => (
+                                                        <tr onClick={() => setMedicalHistory(true)} className=''>
+                                                            <td className='text-center text-white'>{visit.created_at}</td>
+                                                            <td className='text-center text-white'>{visit.visit_type}</td>
+                                                            <td className='text-center text-white'>{visit.visit_type}</td>
+                                                        </tr>
+                                                    ))}
+                                                    <tr onClick={() => setMedicalHistory(true)} className=' bg-gray-100'>
+                                                        <td className='text-center '>data</td>
+                                                        <td className='text-center '>data</td>
+                                                        <td className='text-center '>data</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    :
+                                    <>
+                                        <div className='text-center text-gray-500'>
+                                            No visits yet
+                                        </div>
+                                    </>
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    )
-}
+            </>
+        )
+    }
