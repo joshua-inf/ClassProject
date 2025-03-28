@@ -10,9 +10,7 @@ urlpatterns = [
     path('patient/<int:pk>/', patient_detail, name='patient-detail'),
 
     # Doctors
-    path('clinicians/', Clinician_list, name='doctor-list'),
-    path('clinician-detail/<int:pk>/', Clinician_detail, name='doctor-detail'),
-
+   
     # Visits
     path('visits/', visit_list, name='visit-list'),
     path('visits-detail/<int:pk>/', visit_detail, name='visit-detail'),
