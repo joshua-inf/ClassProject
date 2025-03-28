@@ -57,13 +57,7 @@ def login_clinician(request):
         user = serializer.validated_data
         token, created = Token.objects.get_or_create(user=user)
         user_serializer = CustomUserSerializer(user)
-        return Response({'user': {
-                    'email': user_serializer.email,
-                    'first_name': user_serializer.first_name,
-                    'last_name': user_serializer.last_name,
-                    'specialty': user_serializer.specialty,
-                    'phone_number': user_serializer.phone_number,
-                },"token": token.key})
+        return Response({'user': user_serializer.data,"token": token.key})
     
     return Response({"error": "Invalid credentials"}, status=400)
 
