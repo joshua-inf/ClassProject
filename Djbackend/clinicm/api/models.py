@@ -42,35 +42,37 @@ class Patient(models.Model):
         ('Other', 'Other'),
     ]
 
+
+    patient_id = models.CharField(max_length=10, unique=True, primary_key=True, editable=False)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     dob = models.DateField()
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     phone_number = models.CharField(max_length=20)
     email = models.EmailField(unique=True, null=True, blank=True)
+    Patient_type=models.CharField(max_length=200)
     address = models.TextField()
-    emergency_contact_name = models.CharField(max_length=100)
-    emergency_contact_phone = models.CharField(max_length=20)
+    emergency_contact_name = models.CharField(max_length=100, null=True)
+    emergency_contact_phone = models.CharField(max_length=20, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    customuser=models.ForeignKey(CustomUser, on_delete=models.CASCADE )
+    
+   # customuser=models.ForeignKey(CustomUser, on_delete=models.CASCADE )
+
+    def save(self, *args, **kwargs):
+            if not self.patient_id:  
+                last_patient = Patient.objects.order_by('-patient_id').first()
+                if last_patient and last_patient.patient_id.isdigit():
+                    new_id = int(last_patient.patient_id) + 1
+                else:
+                    new_id = 2500  # Start from 2500 if no patients exist
+                self.patient_id = str(new_id)
+
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
     
     
-
-
-'''class Clinician(models.Model): #
-  
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    specialty = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=20)
-    email = models.EmailField(unique=True)
-
-    def __str__(self):
-        return f"Dr. {self.first_name} {self.last_name} - {self.specialty}" '''
 
 
 class Visit(models.Model):
@@ -82,6 +84,9 @@ class Visit(models.Model):
 
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="visits")
     clinician = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="visits")
+    blood_pressure = models.CharField(max_length=20, )  # Example: "120/80"
+    temperature = models.DecimalField(max_digits=5, decimal_places=2)  # Celsius or Fahrenheit
+    weight = models.DecimalField(max_digits=5, decimal_places=2)
     visit_type = models.CharField(max_length=50, choices=VISIT_TYPE_CHOICES)
     reason_for_visit = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -92,18 +97,6 @@ class Visit(models.Model):
     
     
 
-class Vital(models.Model):
-    visit = models.ForeignKey(Visit, on_delete=models.CASCADE, related_name="vitals")
-    blood_pressure = models.CharField(max_length=20, )  # Example: "120/80"
-    heart_rate = models.IntegerField()
-    respiratory_rate = models.IntegerField(null=True)
-    temperature = models.DecimalField(max_digits=5, decimal_places=2)  # Celsius or Fahrenheit
-    oxygen_saturation = models.DecimalField(max_digits=5, decimal_places=2)  # SpO2 in percentage
-    weight = models.DecimalField(max_digits=5, decimal_places=2)  # in kg
-    height = models.DecimalField(max_digits=5, decimal_places=2)  # in cm
-
-    def __str__(self):
-        return f"Vitals for Visit {self.visit.id}"
 
 
 
@@ -111,7 +104,7 @@ class Vital(models.Model):
 class Diagnosis(models.Model):
     visit = models.ForeignKey(Visit, on_delete=models.CASCADE, related_name="diagnoses")
     diagnosis = models.TextField()
-    icd10_code = models.CharField(max_length=10, blank=True, null=True)
+    
 
     def __str__(self):
         return f"Diagnosis for Visit {self.visit.id}"
@@ -133,7 +126,29 @@ class Prescription(models.Model): #for medication tracking
     
 
 
-class Test(models.Model):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""class Test(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
         ('Completed', 'Completed'),
@@ -147,6 +162,6 @@ class Test(models.Model):
     results = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Test {self.test_name} for Visit {self.visit.id}"
+        return f"Test {self.test_name} for Visit {self.visit.id}" """
 
 
