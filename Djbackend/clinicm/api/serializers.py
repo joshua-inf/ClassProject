@@ -76,6 +76,11 @@ class ClinicianLoginSerializer(serializers.Serializer):
         
         return user
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'first_name', 'last_name', 'specialty', 'phone_number']
+
 
 
 class PatientSerializer(serializers.ModelSerializer):

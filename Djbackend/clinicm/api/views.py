@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout
 from .serializers import (ClinicianRegistrationSerializer,ClinicianLoginSerializer,PatientSerializer, VisitSerializer, 
-     DiagnosisSerializer, PrescriptionSerializer, )
+     DiagnosisSerializer, PrescriptionSerializer, CustomUserSerializer )
 from .models import CustomUser, Patient, Visit, Prescription
 from rest_framework import status
 from django.db.models import Q
@@ -56,6 +56,7 @@ def login_clinician(request):
     if serializer.is_valid():
         user = serializer.validated_data
         token, created = Token.objects.get_or_create(user=user)
+
         return Response({"token": token.key})
     
     return Response({"error": "Invalid credentials"}, status=400)
@@ -84,8 +85,12 @@ def user_login(request):
 @api_view(['GET'])
 def get_user_count(request):
     """ Retrieve the total number of users """
-    user_count = CustomUser.objects.count()  # Count all users
-    return Response({"total_users": user_count})
+    clinicians = CustomUser.objects.all()  # Count all users
+    serializer = CustomUserSerializer(clinicians, many=True)
+    return Response({
+        #"total_users": clinician_count,
+        "users": serializer.data  # Include the serialized user data in the response
+    })
     
 
 
@@ -161,7 +166,7 @@ def patient_detail(request, pk):
 
 
 #clinicians
-@api_view(['GET', 'POST'])
+'''@api_view(['GET', 'POST'])
 def Clinician_list(request):
     if request.method == 'GET':
         clinician = Clinician.objects.all()
@@ -196,7 +201,7 @@ def Clinician_detail(request, pk):
 
     elif request.method == 'DELETE':
         clinician.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)'''
 
 @api_view(['GET', 'POST'])
 def visit_list(request):
