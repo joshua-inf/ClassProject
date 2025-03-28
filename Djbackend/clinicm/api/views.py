@@ -25,6 +25,19 @@ def register_clinician(request):
         return Response({"message": "Clinician registered successfully!"}, status=201)
     
     return Response(serializer.errors, status=400)
+'''
+payload
+{
+    "username": "janedoe",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "janedoe@example.com",
+    "specialty": "doctor",
+    "phone_number": "1234567890",
+    "password": "password123"
+}
+'''
+
 '''def user_register(request):
     if request.method == 'POST':
         serializer = UserRegistrationSerializer(data=request.data)
@@ -33,14 +46,15 @@ def register_clinician(request):
             return Response({'message': 'user successfully registered'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     """ {
-    "username": "john_doe",
-    "password": "SecurePass123!",
-    "password2": "SecurePass123!",
-    "email": "john.doe@example.com",
-    "first_name": "John",
+{
+    "email": "janedoe@example.com",
+    "first_name": "Jane",
     "last_name": "Doe",
-    "StudentId": "ST12345678"
+    "specialty": "doctor",
+    "phone_number": "1234567890",
+    "password": "password123"
 }
+
 '''
 
 # User Login View
@@ -56,6 +70,13 @@ def login_clinician(request):
     
     return Response({"error": "Invalid credentials"}, status=400)
 
+''' payload
+{
+    "email": "janedoe@example.com",
+    "password": "password123"
+}
+'''
+
 '''@api_view(['POST'])
 def user_login(request):
     if request.method == 'POST': #check if the request is a post request 
@@ -70,7 +91,12 @@ def user_login(request):
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)'''
 
-# User Delete view
+@api_view(['GET'])
+def get_user_count(request):
+    """ Retrieve the total number of users """
+    user_count = CustomUser.objects.count()  # Count all users
+    return Response({"total_users": user_count})
+    
 
 
 
