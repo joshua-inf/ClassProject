@@ -19,7 +19,7 @@ import { FaUser } from 'react-icons/fa'
         </div>
         <div>
             <div className='flex flex-wrap items-center gap-2'>
-                <div  className='flex grow-0 p-3 shadow-md rounded-md bg-gray-200 hover:scale-[1.01] transition-all duration-300 cursor-pointer flex-col gap-2'> 
+                <div  className='flex grow-0 p-3 shadow-md rounded-md bg-gray-200  cursor-pointer flex-col gap-2'> 
                 <div>
                         User Details
                     </div>
@@ -39,7 +39,7 @@ import { FaUser } from 'react-icons/fa'
                         Visit History
                     </div>
                     <hr className='border-gray-300' />   
-                    {visits.length > 0 ? 
+                    {visits ? 
                         <div>
                             <div>
                                 <table className=' w-full border-spacing-1 border '>
@@ -51,13 +51,19 @@ import { FaUser } from 'react-icons/fa'
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
                                         {visits.map((visit) => (
                                             <tr className='border-b border-gray-300 bg-gray-500'>
-                                                <td className='text-center text-white'>{visit.visit_date}</td>
+                                                <td className='text-center text-white'>{visit.created_at}</td>
                                                 <td className='text-center text-white'>{visit.visit_type}</td>
-                                                <td className='text-center text-white'>{visit.reason_for_visit}</td>
+                                                <td className='text-center text-white'>{visit.visit_type}</td>
                                             </tr>
                                         ))}
+                                        <tr className='border-b border-gray-300 bg-gray-300'>
+                                                <td className='text-center '>data</td>
+                                                <td className='text-center '>data</td>
+                                                <td className='text-center '>data</td>
+                                            </tr>
                                     </tbody>
                                 </table>
                             </div>
