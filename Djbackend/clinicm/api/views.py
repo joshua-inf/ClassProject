@@ -165,43 +165,8 @@ def patient_detail(request, pk):
 
 
 
-#clinicians
-'''@api_view(['GET', 'POST'])
-def Clinician_list(request):
-    if request.method == 'GET':
-        clinician = Clinician.objects.all()
-        serializer = ClinicianSerializer(clinician, many=True) #returns all clinicians
-        return Response(serializer.data)
+#
 
-    elif request.method == 'POST':
-        serializer = ClinicianSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def Clinician_detail(request, pk):
-    try:
-        clinician = Clinician.objects.get(pk=pk)
-    except Clinician.DoesNotExist:
-        return Response({'error': 'Doctor not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == 'GET':
-        serializer = ClinicianSerializer(clinician)
-        return Response(serializer.data)
-
-    elif request.method == 'PUT':
-        serializer = ClinicianSerializer(clinician, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':
-        clinician.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)'''
 
 @api_view(['GET', 'POST'])
 def visit_list(request):
@@ -218,7 +183,7 @@ def visit_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#vists view api
+#visits view api
 @api_view(['GET', 'PUT', 'DELETE'])
 def visit_detail(request, pk):
     try:
