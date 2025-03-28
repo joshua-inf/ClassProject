@@ -23,7 +23,7 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
   const SidebarNavLink = ({ href, children, icon: Icon }: { href: string, children: React.ReactNode, icon: any }) => {
     const isActive = router === href;
     return (
-      <Link href={href} className={`flex relative items-center space-x-3 px-4 py-3 text-gray-600    rounded-lg transition-all duration-200 ${isActive ? "bg-white text-[#718EBF] bg-opacity-20" : ""}`}>
+      <Link href={href} className={`flex hover:scale-110 transition-all duration-300 relative items-center space-x-3 px-4 py-3 text-gray-600    rounded-lg transition-all duration-200 ${isActive ? "bg-white text-[#718EBF] bg-opacity-20" : ""}`}>
         {isActive ? 
         <div className="w-[10px] absolute left-0 rounded-r-md bg-[#718EBF] h-full"></div>
         : <></>
@@ -45,11 +45,11 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
       )}
 
       {/* Sidebar Space */}
-      <div className="hidden lg:block min-w-64" />
+      <div className="hidden lg:block min-w-40" />
 
       {/* Sidebar */}
       <div className={`
-        fixed top-0 left-0 z-50 w-64 min-h-screen flex flex-col shadow-md transition-transform duration-300
+        fixed top-0 left-0 bg-white z-50 w-40 min-h-screen flex flex-col shadow-md transition-transform duration-300
         ${mobileNav ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}>
         <div className="p-6">
@@ -131,7 +131,7 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
         </div>
 
         {/* Page Content */}
-        <main className="p-2 pb-20">
+        <main className="p-2 bg-gray-100 min-h-screen pb-20">
           {children}
         </main>
       </div>

@@ -53,9 +53,6 @@ export const StuffPage = () => {
 
             }
         )
-
-
-
     };
 
     useEffect(() => {
@@ -158,7 +155,7 @@ export const StuffPage = () => {
                                     <button type="submit" className="grow bg-green-600 p-2 rounded-md text-white">
                                         Save
                                     </button>
-                                    <button type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
+                                    <button onClick={()=> setPopup(false)} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
                                         Cancel
                                     </button>
                                 </div>
@@ -174,7 +171,7 @@ export const StuffPage = () => {
                     List of stuff members
                 </div>
                 <div className='flex justify-end'>
-                    <button onClick={() => setPopup(true)} className='flex hover:scale-[1.01] transition-all duration-300 items-center bg-blue-600 py-3 px-5 text-white rounded-md shadow-md '> <PlusIcon className='size-5' /> add members</button>
+                    <button onClick={() => setPopup(true)} className='flex hover:scale-[1.01] transition-all duration-300 items-center bg-blue-600 p-2 px-5 text-white rounded-md shadow-md '> <PlusIcon className='size-5' /> add members</button>
                 </div>
                 {
                     loading ?
@@ -193,7 +190,7 @@ export const StuffPage = () => {
                             {
                                 clinicianData.length > 0 ?
                                     <table className='w-full'>
-                                        <thead className='bg-gray-300'>
+                                        <thead className='bg-white'>
                                             <tr>
                                                 <th>first name</th>
                                                 <th>last name</th>
