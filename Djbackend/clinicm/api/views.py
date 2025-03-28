@@ -5,10 +5,9 @@ from rest_framework import status
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout
-from .serializers import (ClinicianRegistrationSerializer,ClinicianLoginSerializer,PatientSerializer, VisitSerializer, VitalSerializer, 
-     DiagnosisSerializer, PrescriptionSerializer, 
-    TestSerializer)
-from .models import CustomUser, Patient, Test, Vital, Visit, Prescription
+from .serializers import (ClinicianRegistrationSerializer,ClinicianLoginSerializer,PatientSerializer, VisitSerializer, 
+     DiagnosisSerializer, PrescriptionSerializer, )
+from .models import CustomUser, Patient, Visit, Prescription
 from rest_framework import status
 from django.db.models import Q
 

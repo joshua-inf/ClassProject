@@ -3,7 +3,7 @@
 #for easy interaction with api
 from rest_framework import serializers
 from django.contrib.auth import authenticate #checks if user is authenticated the grants access
-from .models import CustomUser, Patient, Visit, Vital, Diagnosis, Prescription, Test
+from .models import CustomUser, Patient, Visit, Diagnosis, Prescription
 from django.contrib.auth import get_user_model
 
 #for user registration

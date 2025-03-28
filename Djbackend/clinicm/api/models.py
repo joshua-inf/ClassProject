@@ -115,7 +115,6 @@ class Prescription(models.Model): #for medication tracking
     medication_name = models.CharField(max_length=255)
     dosage = models.CharField(max_length=100)
     quantity = models.IntegerField()
-    refills = models.IntegerField(default=0)
     start_date = models.DateField()
     end_date = models.DateField()
     instructions = models.TextField()
