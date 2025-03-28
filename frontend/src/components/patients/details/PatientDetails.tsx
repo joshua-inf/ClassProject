@@ -13,7 +13,7 @@ export const PatientDetails = () => {
                 <Link href="/patients" className='bg-white items-center flex hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
                     <BiArrowBack className='' />
                 </Link>
-                <button className='bg-white hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
+                <button  className='bg-white hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
                     Add visit
                 </button>
             </div>
