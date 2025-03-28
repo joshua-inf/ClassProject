@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ClockLoader } from 'react-spinners';
 import { FaGraduationCap, FaChartLine, FaUsers, FaClock, FaCalendarCheck, FaCheckCircle, FaTimesCircle, FaStethoscope, FaHeartbeat, FaLungs, FaVirus } from 'react-icons/fa';
 import { MdTrendingUp, MdTrendingDown } from 'react-icons/md';
@@ -46,6 +46,7 @@ export const Dashboard = () => {
          axios.get('http://localhost:8000/api/statistics/')
          .then((res) => {
             setData(res.data)
+            console.log(res.data)
          })
          .catch((err) => {
             console.log(err)
@@ -58,6 +59,10 @@ export const Dashboard = () => {
         Male: data.male,
         Female: data.female
     }));
+
+    useEffect(()=>{
+        fetchData()
+    },[])
 
     return (
         <div className='text-gray-800 p-5 flex flex-col gap-4 '>
