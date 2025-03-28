@@ -14,7 +14,6 @@ from django.db.models import Q
 # user Registration View
 
 @api_view(['POST'])
-#@permission_classes([AllowAny])  # Allow any user to register
 def register_clinician(request):
     """ Register a new clinician """
     serializer = ClinicianRegistrationSerializer(data=request.data)
@@ -26,25 +25,9 @@ def register_clinician(request):
     return Response(serializer.errors, status=400)
 '''
 payload
-{
-    "username": "janedoe",
-    "first_name": "Jane",
-    "last_name": "Doe",
-    "email": "janedoe@example.com",
-    "specialty": "doctor",
-    "phone_number": "1234567890",
-    "password": "password123"
-}
 '''
 
-'''def user_register(request):
-    if request.method == 'POST':
-        serializer = UserRegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({'message': 'user successfully registered'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    """ {
+'''
 {
     "email": "janedoe@example.com",
     "first_name": "Jane",

@@ -13,13 +13,18 @@ class ClinicianRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser  # This points to the CustomUser model
-        fields = ['username', 'first_name', 'last_name', 'email', 'specialty', 'phone_number', 'password']
+        fields = ['email', 'first_name', 'last_name', 'specialty', 'phone_number', 'password']
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = CustomUser.objects.create_user(**validated_data)  # Create a user with the password hash
-        user.set_password(password)
-        user.save()
+        user = CustomUser.objects.create_user(
+           # username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            specialty=validated_data['specialty'],
+            phone_number=validated_data['phone_number']
+        )
         return user
 '''class ClinicianRegistrationSerializer(serializers.ModelSerializer):
     password=serializers.CharField(write_only=True)#accepts user data but not include in response for security

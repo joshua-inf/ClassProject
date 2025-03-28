@@ -21,7 +21,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class CustomUser(AbstractUser):
-    username = None  # Remove username field
+    username=models.CharField(max_length=200, default="user")
     email = models.EmailField(unique=True)  # Use email as the unique identifier
     specialty = models.CharField(max_length=100, choices=[('doctor', 'Doctor'), ('nurse', 'Nurse'), ('clinic officer', 'Clinical Officer')])
     phone_number = models.CharField(max_length=20)
@@ -34,6 +34,15 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
+'''{
+    "email": "testuser@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "specialty": "doctor",
+    "phone_number": "1234567890",
+    "password": "securepassword123"
+}
+'''
 
 class Patient(models.Model):
     GENDER_CHOICES = [
