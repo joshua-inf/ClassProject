@@ -1,11 +1,8 @@
 'use client'
 import { visits } from '@/modals/visit';
 import { Diagnosis } from '@/modals/Diagnosis';
-import Link from 'next/link';
 import React, { useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi';
-import { FaUser } from 'react-icons/fa'
-import { patients } from '@/modals/patients';
 import axios from 'axios';
 
 export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setSeachResult: any, func: (any: any) => any }) => {
@@ -31,6 +28,11 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
             .finally(() => {
                 setLoading2(false)
             })
+    }
+
+
+    const getVisits = () => {
+        axios.get('')
     }
     return (
         <>

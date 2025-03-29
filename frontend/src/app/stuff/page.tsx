@@ -10,7 +10,7 @@ const page = () => {
   return (
     <NavigationLayout>
       {
-        role == 'doctor' && (
+        role != 'nurse' && (
           <StuffPage />
         )
       }
