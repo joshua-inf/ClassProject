@@ -8,12 +8,13 @@ urlpatterns = [
   # Patients
     path('patients/', patient_list, name='patient-list'),
     path('patient/<int:pk>/', patient_detail, name='patient-detail'),
+    path('patients/<int:patient_id>/visits/', patient_visits, name='patient-visits'),
 
     # Doctors
    
     # Visits
-    path('visits/', visit_list, name='visit-list'),
-    path('visits-detail/<int:pk>/', visit_detail, name='visit-detail'),
+    #path('visits/', visit_list, name='visit-list'),
+    #path('visits-detail/<int:pk>/', visit_detail, name='visit-detail'),
     
     #statistical
     path('statistics/', statistics_view, name="statistics"),

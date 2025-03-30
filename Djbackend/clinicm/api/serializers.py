@@ -103,13 +103,13 @@ class PatientSerializer(serializers.ModelSerializer):
 
 
 class VisitSerializer(serializers.ModelSerializer):
-    patient = PatientSerializer(read_only=True)  # Nested serialization
+    patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())
     clinician = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all(), required=False, allow_null=True)  # Accepts c
-    #clinician = Cusomer(read_only=True)
+    #clinician = CusTomer(read_only=True)
 
     class Meta:
         model = Visit
-        fields = '__all__'
+        fields =['patient','clinician','blood_pressure','temperature','weight','visit_type','reason_for_visit']
 
 
 

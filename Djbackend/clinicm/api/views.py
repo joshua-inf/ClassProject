@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -165,10 +165,31 @@ def patient_detail(request, pk):
 
 
 
+
+@api_view(['GET','POST'])
+def patient_visits(request, patient_id):
+    """
+    Get all visits for a specific patient.
+    """
+    patient = get_object_or_404(Patient, pk=patient_id)
+    if request.method=="GET":
+        #patient = get_object_or_404(Patient, pk=patient_id)
+        visits = Visit.objects.filter(patient=patient)
+        serializer = VisitSerializer(visits, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method=="POST":
+        serializer=VisitSerializer(data=request.data)#iinitailiz the serialize with data passed
+        if serializer.is_valid():
+            serializer.save(patient=patient)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
 #
 
 
-@api_view(['GET', 'POST'])
+"""@api_view(['GET', 'POST']) #== unecessary because it deisplays all visits in the table that are need
 def visit_list(request):
     if request.method == 'GET':
         visits = Visit.objects.all()
@@ -180,12 +201,12 @@ def visit_list(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
 
 
 #visits view api
 @api_view(['GET', 'PUT', 'DELETE'])
-def visit_detail(request, pk):
+def create_delete_visit(request, pk):
     try:
         visit = Visit.objects.get(pk=pk)
     except Visit.DoesNotExist:
@@ -205,6 +226,10 @@ def visit_detail(request, pk):
     elif request.method == 'DELETE':
         visit.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
 
 #medical view api
 
