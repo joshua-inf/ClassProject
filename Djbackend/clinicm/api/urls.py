@@ -20,8 +20,9 @@ urlpatterns = [
     path('statistics/', statistics_view, name="statistics"),
 
     #prescriptions
+    path('visits/<int:visit_id>/prescriptions/', visit_prescriptions, name='visit-prescriptions'),
     path('prescriptions-list/', prescription_list, name='prescription_list'),
-    path('prescriptions/<int:pk>/', prescription_detail, name='prescription_detail'),
+    #path('prescriptions/<int:pk>/', prescription_detail, name='prescription_detail'),
 
 ]
 

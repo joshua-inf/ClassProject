@@ -166,7 +166,7 @@ def patient_detail(request, pk):
 
 
 
-@api_view(['GET','POST'])
+@api_view(['GET','POST','DELETE'])
 def patient_visits(request, patient_id):
     """
     Get all visits for a specific patient.
@@ -174,6 +174,7 @@ def patient_visits(request, patient_id):
     patient = get_object_or_404(Patient, pk=patient_id)
     if request.method=="GET":
         visits = Visit.objects.filter(patient=patient)
+
         serializer = VisitSerializer(visits, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     elif request.method=="POST":
@@ -182,7 +183,10 @@ def patient_visits(request, patient_id):
             serializer.save(patient=patient)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+    '''elif request.method == 'DELETE':
+        visits.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)'''
+
 
 
 #
@@ -259,8 +263,29 @@ def prescription_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+@api_view(['GET', 'POST'])
+def visit_prescriptions(request, visit_id):
+    """
+    Retrieve all prescriptions for a visit or add a new one.
+    """
+    visit = get_object_or_404(Visit, pk=visit_id)
+
+    if request.method == 'GET':
+        prescriptions = Prescription.objects.filter(visit=visit)
+        serializer = PrescriptionSerializer(prescriptions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        serializer = PrescriptionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(visit=visit)  # Associate prescription with visit
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # Retrieve, Update, or Delete a specific prescription
-@api_view(['GET', 'PUT', 'DELETE'])
+'''@api_view(['GET', 'PUT', 'DELETE'])
 def prescription_detail(request, pk):
     try:
         prescription = Prescription.objects.get(pk=pk)
@@ -280,4 +305,4 @@ def prescription_detail(request, pk):
 
     elif request.method == 'DELETE':
         prescription.delete()
-        return Response({"prescription deleted"},status=status.HTTP_204_NO_CONTENT)
+        return Response({"prescription deleted"},status=status.HTTP_204_NO_CONTENT)'''
