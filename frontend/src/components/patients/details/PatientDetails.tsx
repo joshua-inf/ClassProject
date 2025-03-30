@@ -5,6 +5,10 @@ import React, { useEffect, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi';
 import axios from 'axios';
 import { getUserDataCookie } from '@/lib';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import { ArrowDownCircleIcon } from '@heroicons/react/16/solid';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import { prescriptionDataType } from '@/modals/Prescription';
 
 export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setSeachResult: any, func: (any: any) => any }) => {
     const userData = getUserDataCookie()
@@ -90,6 +94,70 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
 
     }
 
+    const Prescription = ({data}:{data:any}) => {
+        const [prescriptionData, setPrescriptionData] = useState<prescriptionDataType>()
+        const getPrescriptionData =() => {
+            axios.get(`http://localhost:8000/api/visits/${data}/prescriptions`)
+            .then((res)=>{
+                setPrescriptionData(res.data[0])
+                console.log(res.data)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+            .finally(()=>{
+
+            })
+        }
+
+        useEffect(()=>{
+            getPrescriptionData()
+        },[])
+
+
+        return (
+            <>
+                <div>
+                    {prescriptionData ? 
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<MdKeyboardArrowDown color='black' size={20} />}
+                            >
+                                <Typography variant="subtitle1" fontWeight="bold">
+                                    {prescriptionData?.medication_name} - {prescriptionData?.dosage}
+                                </Typography>
+                            </AccordionSummary>
+
+                            <AccordionDetails>
+                                <Typography>
+                                    <strong>Instructions:</strong>
+                                    {prescriptionData?.instructions}
+                                </Typography>
+                                <Typography>
+                                    <strong>Prescribed By:</strong> Clinician ID
+                                    {prescriptionData?.prescribed_by}
+                                </Typography>
+                                <Typography>
+                                    <strong>Quantity:</strong>
+                                    {prescriptionData?.quantity}
+                                </Typography>
+                                <Typography>
+                                    <strong>Start Date:</strong>
+                                    {prescriptionData?.start_date}
+                                </Typography>
+                                <Typography>
+                                    <strong>End Date:</strong>
+                                    {prescriptionData?.end_date}
+                                </Typography>
+                            </AccordionDetails>
+                        </Accordion>
+                    :
+                    <></>
+                    }
+                </div>
+            </>
+        )
+    }
 
 
     useEffect(() => {
@@ -198,7 +266,7 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                             <button type="submit" className="grow bg-green-600 p-2 rounded-md text-white">
                                                 Save
                                             </button>
-                                            <button onClick={() => { setCreateVisit(false); clearFields();setSuccess(false) }} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
+                                            <button onClick={() => { setCreateVisit(false); clearFields(); setSuccess(false) }} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
                                                 Cancel
                                             </button>
                                         </div>
@@ -329,6 +397,12 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                                     <div className='text-gray-600'>Visit Type: {visit.visit_type}</div>
                                                     <div className='text-gray-600'></div>
                                                 </div>
+                                            </div>
+
+
+                                            <div>
+                                                
+                                                <Prescription data={visit.id} />
                                             </div>
                                         </div>
                                     )

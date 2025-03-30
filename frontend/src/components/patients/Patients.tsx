@@ -96,6 +96,11 @@ export const Patients = () => {
             })
     }
 
+    const addPrescription = (e: React.FormEvent<HTMLFormElement>)=>{
+        e.preventDefault()
+        console.log()
+    }
+
     if (pageNumber == 1) {
         return (
             <>
@@ -293,6 +298,7 @@ export const Patients = () => {
                                                     <FaArrowRight className='text-gray-500 size-5' />
                                                 </div>
                                             </div>
+
                                         </div>
                                         :
                                         <>
