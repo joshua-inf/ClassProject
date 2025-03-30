@@ -109,7 +109,7 @@ class VisitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Visit
-        fields =['patient','clinician','blood_pressure','temperature','weight','visit_type','reason_for_visit']
+        fields =['id','patient','clinician','blood_pressure','temperature','weight','visit_type','reason_for_visit']
 
 
 
