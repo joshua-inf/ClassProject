@@ -125,7 +125,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
     visit = serializers.PrimaryKeyRelatedField(queryset=Visit.objects.all())  # links prescription to a visit
     class Meta:
         model = Prescription
-        fields = '__all__'
+        fields = ['id', 'visit', 'medication_name', 'dosage', 'quantity', 'start_date', 'end_date', 'instructions']
 
 
 
