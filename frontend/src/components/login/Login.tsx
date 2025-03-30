@@ -21,7 +21,7 @@ export const LoginPage = () => {
         axios.post('http://localhost:8000/api/login-clinician/', { email: data.email, password: data.password })
             .then((res) => {
                 if (res.data) {
-                    console.log(res.data.token)
+                    // console.log(res.data)
                     createCookie(res.data.token, res.data.user, res.data.user.specialty)
                     router.push('/')
                 }
