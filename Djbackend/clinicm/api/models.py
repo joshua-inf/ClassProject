@@ -79,7 +79,7 @@ class Patient(models.Model):
             super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name} {self.patient_id}"
     
     
 
