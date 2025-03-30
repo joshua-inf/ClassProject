@@ -118,8 +118,7 @@ class DiagnosisSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Diagnosis
-        fields = '__all__'
-
+        fields = ['id', 'visit', 'diagnosis']
 
 class PrescriptionSerializer(serializers.ModelSerializer):
     visit = serializers.PrimaryKeyRelatedField(queryset=Visit.objects.all())  # links prescription to a visit

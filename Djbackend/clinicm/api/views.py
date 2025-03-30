@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import logout
 from .serializers import (ClinicianRegistrationSerializer,ClinicianLoginSerializer,PatientSerializer, VisitSerializer, 
      DiagnosisSerializer, PrescriptionSerializer, CustomUserSerializer )
-from .models import CustomUser, Patient, Visit, Prescription
+from .models import CustomUser, Patient, Visit, Prescription,Diagnosis
 from rest_framework import status
 from django.db.models import Q
 
@@ -253,7 +253,7 @@ def statistics_view(request):
 
 
 
-@api_view(['GET', 'POST'])
+"""@api_view(['GET', 'POST'])
 def prescription_list(request):
     if request.method == 'GET':
         prescriptions = Prescription.objects.all()
@@ -265,7 +265,7 @@ def prescription_list(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)"""
 
 
 
@@ -285,6 +285,23 @@ def visit_prescriptions(request, visit_id):
         serializer = PrescriptionSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(visit=visit)  # Associate prescription with visit
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST'])
+def visit_diagnoses(request, visit_id):
+    visit = get_object_or_404(Visit, id=visit_id)
+
+    if request.method == 'GET':
+        diagnoses = Diagnosis.objects.filter(visit=visit)
+        serializer = DiagnosisSerializer(diagnoses, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    elif request.method == 'POST':
+        serializer = DiagnosisSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(visit=visit)  # Assign visit before saving
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
