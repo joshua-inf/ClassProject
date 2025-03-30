@@ -4,8 +4,10 @@ import { Diagnosis } from '@/modals/Diagnosis';
 import React, { useEffect, useState } from 'react'
 import { BiArrowBack } from 'react-icons/bi';
 import axios from 'axios';
+import { getUserDataCookie } from '@/lib';
 
 export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setSeachResult: any, func: (any: any) => any }) => {
+    const userData = getUserDataCookie()
     const [visits, setVisits] = useState<visits[]>([]);
     const [medicalHistory, setMedicalHistory] = useState(false)
     const [loading2, setLoading2] = useState(false)
@@ -24,8 +26,31 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
     const [reasonForVisit, setReasonForVisit] = useState('')
 
     const addVisit = (e: React.FormEvent<HTMLFormElement>) => {
+        setLoading2(true)
         e.preventDefault()
         console.log("add visit")
+        axios.post('http://localhost:8000/api/patients/' + data.patient_id + '/visits/', {
+
+            patient: data.patient_id,
+            clinician: userData.id,
+            blood_pressure: bloodPressure,
+            temperature: temperature,
+            weight: weight,
+            visit_type: visitType,
+            reason_for_visit: reasonForVisit
+        })
+            .then((res) => {
+                // console.log(res.data)
+                getVisits()
+                clearFields()
+                setCreateVisit(false)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading2(false)
+            })
     }
     const clearFields = () => {
         setPatientId('')
@@ -58,8 +83,14 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
         axios.get('http://localhost:8000/api/patients/' + data.patient_id + '/visits')
             .then((res) => setVisitData(res.data))
             .catch((err) => console.log(err))
+    }
+
+
+    const addDiagnosis = () => {
 
     }
+
+
 
     useEffect(() => {
         getVisits()
@@ -167,7 +198,7 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                             <button type="submit" className="grow bg-green-600 p-2 rounded-md text-white">
                                                 Save
                                             </button>
-                                            <button onClick={() => { setCreateVisit(false); clearFields() }} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
+                                            <button onClick={() => { setCreateVisit(false); clearFields();setSuccess(false) }} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
                                                 Cancel
                                             </button>
                                         </div>
@@ -184,30 +215,30 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
             {
                 deletePopupVisible ?
                     <div className={`bg-[#00000090] p-3 flex items-center justify-center z-[90] fixed top-0 bottom-0 left-0 right-0 ${deletePopupVisible ? '' : 'hidden'}`}>
-    <div className="p-3 max-w-[400px] bg-white  rounded-lg shadow">
-        <div className="text-gray-700 p-5 dark:text-gray-200 text-center">
-            <div className="font-medium text-lg text-red-600">Are you sure you want to delete this item?</div>
-            <div className="text-gray-600 mt-2">all data related to this patient will be deleted</div>
-            <div className="text-gray-600 mt-2">NOTE: This action is irreversible.</div>
-        </div>
-        <div className="flex gap-3 mt-4">
-            <button
-                onClick={deleteData} // Call function to confirm deletion
-                className="grow bg-red-600 p-2 rounded-md text-white hover:bg-red-700 transition-all duration-200"
-            >
-                Delete
-            </button>
-            <button
-                onClick={() => setDeletePopupVisible(false)} // Close the popup without deleting
-                className="grow bg-gray-600 p-2 rounded-md text-white hover:bg-gray-700 transition-all duration-200"
-            >
-                Cancel
-            </button>
-        </div>
+                        <div className="p-3 max-w-[400px] bg-white  rounded-lg shadow">
+                            <div className="text-gray-700 p-5 dark:text-gray-200 text-center">
+                                <div className="font-medium text-lg text-red-600">Are you sure you want to delete this item?</div>
+                                <div className="text-gray-600 mt-2">all data related to this patient will be deleted</div>
+                                <div className="text-gray-600 mt-2">NOTE: This action is irreversible.</div>
+                            </div>
+                            <div className="flex gap-3 mt-4">
+                                <button
+                                    onClick={deleteData} // Call function to confirm deletion
+                                    className="grow bg-red-600 p-2 rounded-md text-white hover:bg-red-700 transition-all duration-200"
+                                >
+                                    Delete
+                                </button>
+                                <button
+                                    onClick={() => setDeletePopupVisible(false)} // Close the popup without deleting
+                                    className="grow bg-gray-600 p-2 rounded-md text-white hover:bg-gray-700 transition-all duration-200"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                :
-                <></>
+                    :
+                    <></>
             }
             <div className='flex flex-col gap-5 p-5'>
                 <div className='flex justify-between '>
@@ -217,12 +248,6 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                     <div className='flex gap-2'>
                         <button onClick={() => setCreateVisit(true)} className='bg-green-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
                             Create Visit
-                        </button>
-                        <button onClick={() => setCreateVisit(true)} className='bg-orange-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
-                            add Diagnosis
-                        </button>
-                        <button onClick={() => setCreateVisit(true)} className='bg-blue-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
-                            give Prescription
                         </button>
                         <button onClick={() => setDeletePopupVisible(true)} className='bg-red-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
                             delete
@@ -263,7 +288,6 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                 </div>
                             </div>
                         </div>
-
                         {/* visit history */}
                         <div className='flex grow-0 p-3 cursor-pointer flex-col gap-2'>
                             <div>
@@ -274,6 +298,20 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                 {
                                     visitData.map((visit: any, key: number) =>
                                         <div key={key} className='border-b border-gray-300 pb-2'>
+                                            <div className='flex justify-end'>
+                                                <div className='flex'>
+
+                                                    <button onClick={() => setCreateVisit(true)} className='bg-orange-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-l-md'>
+                                                        add Diagnosis
+                                                    </button>
+                                                    <button onClick={() => setCreateVisit(true)} className='bg-blue-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5'>
+                                                        give Prescription
+                                                    </button>
+                                                    <button onClick={() => setDeletePopupVisible(true)} className='bg-red-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-r-md'>
+                                                        delete
+                                                    </button>
+                                                </div>
+                                            </div>
                                             <div className='font-medium text-base mb-2'>
                                                 Reason: {visit.reason_for_visit}
                                             </div>
