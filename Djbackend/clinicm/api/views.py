@@ -173,7 +173,6 @@ def patient_visits(request, patient_id):
     """
     patient = get_object_or_404(Patient, pk=patient_id)
     if request.method=="GET":
-        patient = get_object_or_404(Patient, pk=patient_id)
         visits = Visit.objects.filter(patient=patient)
         serializer = VisitSerializer(visits, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
