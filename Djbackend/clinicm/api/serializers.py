@@ -114,7 +114,7 @@ class VisitSerializer(serializers.ModelSerializer):
 
 
 class DiagnosisSerializer(serializers.ModelSerializer):
-    visit = VisitSerializer(read_only=True)
+    visit = serializers.PrimaryKeyRelatedField(queryset=Visit.objects.all())
 
     class Meta:
         model = Diagnosis
@@ -122,8 +122,7 @@ class DiagnosisSerializer(serializers.ModelSerializer):
 
 
 class PrescriptionSerializer(serializers.ModelSerializer):
-    visit = VisitSerializer(read_only=True)
-
+    visit = serializers.PrimaryKeyRelatedField(queryset=Visit.objects.all())  # links prescription to a visit
     class Meta:
         model = Prescription
         fields = '__all__'
