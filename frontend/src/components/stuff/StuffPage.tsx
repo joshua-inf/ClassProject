@@ -29,7 +29,7 @@ export const StuffPage = () => {
                     console.log("success: ", res.data.users)
                     setClinicianData(res.data.users)
                     setSuccess(true)
-                    getClinicianData()
+                    // getClinicianData()
                 }
             })
             .catch((err) => {

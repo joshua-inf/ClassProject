@@ -11,7 +11,29 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
     const [loading2, setLoading2] = useState(false)
     const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
     const [visitData, setVisitData] = useState<any>([]);
+    const [success, setSuccess] = useState(false)
+    const [createVisit, setCreateVisit] = useState(false)
 
+    const [patientId, setPatientId] = useState('')
+    const [clinicianId, setClinicianId] = useState('')
+    const [bloodPressure, setBloodPressure] = useState('')
+    const [temperature, setTemperature] = useState('')
+    const [weight, setWeight] = useState('')
+    const [visitType, setVisitType] = useState('')
+    const [deletePopupVisible, setDeletePopupVisible] = useState(false)
+    const [reasonForVisit, setReasonForVisit] = useState('')
+
+    const addVisit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        console.log("add visit")
+    }
+    const clearFields = () => {
+        setPatientId('')
+        setClinicianId('')
+        setBloodPressure('')
+        setTemperature('')
+        setWeight('')
+    }
 
     const deleteData = () => {
         setLoading2(true)
@@ -41,73 +63,171 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
 
     useEffect(() => {
         getVisits()
-    })
+    }, [])
 
     return (
         <>
-            {/* user medical history */}
             {
-                medicalHistory && (
-                    <div className='fixed top-0 left-0 flex justify-center items-center w-full h-full bg-black bg-opacity-50 z-50'>
-                        <div className='bg-white md:w-1/2 w-3/4 p-5 flex flex-col gap-5  rounded-md'>
-                            <div>
-                                User Medical History
-                                <hr className='border-gray-300' />
-                            </div>
-                            <div>
-                                <div>
-                                    Visit details:
+                createVisit ?
+                    <div className='fixed top-0 flex left-0 justify-center bg-[#00000050] items-center bottom-0 w-full z-[999]'>
+                        {
+                            loading2 ?
+                                <div className='flex justify-center items-center'>
+                                    <div className="animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
                                 </div>
-                                <div>
-                                    {diagnosis.map((diagnosis) => (
-                                        <div>
-                                            <i>
-                                                {diagnosis.diagnosis}
-                                            </i>
+                                :
+                                <div className='bg-white md:w-1/2 w-3/4 rounded-md  absolute p-4 z-[9999]'>
+                                    <form onSubmit={addVisit} className="text-sm space-y-5">
+                                        {
+                                            success ?
+                                                <div className='text-green-600 text-center'>
+                                                    Successfully added
+                                                </div>
+                                                :
+                                                <></>
+                                        }
+
+                                        <div className='flex gap-2'>
+                                            <div className="flex grow flex-col">
+                                                <label className="text-gray-600">Blood Pressure</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="blood_pressure"
+                                                        type="text"
+                                                        onChange={(e: any) => setBloodPressure(e.target.value)}
+                                                        required
+                                                        placeholder="Enter blood pressure (e.g. 120/80)"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex grow flex-col">
+                                                <label className="text-gray-600">Temperature</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="temperature"
+                                                        type="number"
+                                                        step="0.1"
+                                                        onChange={(e: any) => setTemperature(e.target.value)}
+                                                        required
+                                                        placeholder="Enter temperature (e.g. 36.6)"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
 
-                            <div>
-                                <div>
-                                    Diagnosis:
-                                </div>
-                                <div>
-                                    {diagnosis.map((diagnosis) => (
-                                        <div>
-                                            <i>
-                                                {diagnosis.diagnosis}
-                                            </i>
+                                        <div className='flex gap-2'>
+                                            <div className="flex grow flex-col">
+                                                <label className="text-gray-600">Weight</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <input
+                                                        name="weight"
+                                                        type="number"
+                                                        step="0.1"
+                                                        onChange={(e: any) => setWeight(e.target.value)}
+                                                        required
+                                                        placeholder="Enter weight (e.g. 75.5)"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="flex grow flex-col">
+                                                <label className="text-gray-600">Visit Type</label>
+                                                <div className="border border-gray-300 rounded-lg">
+                                                    <select
+                                                        onChange={(e: any) => setVisitType(e.target.value)}
+                                                        name="visit_type"
+                                                        className="p-2 w-full text-gray-600 outline-none"
+                                                    >
+                                                        <option value="">Select Visit Type</option>
+                                                        <option value="Emergency">Emergency</option>
+                                                        <option value="Routine">Routine</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
 
-                            <div>
-                                <div>
-                                    Prescription:
-                                </div>
-                                <div>
+                                        <div className="flex flex-col">
+                                            <label className="text-gray-600">Reason for Visit</label>
+                                            <div className="border border-gray-300 rounded-lg">
+                                                <textarea
+                                                    name="reason_for_visit"
+                                                    onChange={(e: any) => setReasonForVisit(e.target.value)}
+                                                    required
+                                                    placeholder="Enter reason for visit"
+                                                    className="p-2 w-full  text-gray-600 outline-none"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-3">
+                                            <button type="submit" className="grow bg-green-600 p-2 rounded-md text-white">
+                                                Save
+                                            </button>
+                                            <button onClick={() => { setCreateVisit(false); clearFields() }} type="button" className="grow bg-blue-600 p-2 rounded-md text-white">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </form>
 
                                 </div>
-                            </div>
-                            <div>
-
-                                <button onClick={() => setMedicalHistory(false)} className='bg-gray-200 w-full hover:scale-[1.01] transition-all duration-300 p-2 px-2 rounded-md'>close</button>
-                            </div>
-                        </div>
+                        }
                     </div>
-                )
+                    :
+                    <></>
+
+            }
+
+            {
+                deletePopupVisible ?
+                    <div className={`bg-[#00000090] p-3 flex items-center justify-center z-[90] fixed top-0 bottom-0 left-0 right-0 ${deletePopupVisible ? '' : 'hidden'}`}>
+    <div className="p-3 max-w-[400px] bg-white  rounded-lg shadow">
+        <div className="text-gray-700 p-5 dark:text-gray-200 text-center">
+            <div className="font-medium text-lg text-red-600">Are you sure you want to delete this item?</div>
+            <div className="text-gray-600 mt-2">all data related to this patient will be deleted</div>
+            <div className="text-gray-600 mt-2">NOTE: This action is irreversible.</div>
+        </div>
+        <div className="flex gap-3 mt-4">
+            <button
+                onClick={deleteData} // Call function to confirm deletion
+                className="grow bg-red-600 p-2 rounded-md text-white hover:bg-red-700 transition-all duration-200"
+            >
+                Delete
+            </button>
+            <button
+                onClick={() => setDeletePopupVisible(false)} // Close the popup without deleting
+                className="grow bg-gray-600 p-2 rounded-md text-white hover:bg-gray-700 transition-all duration-200"
+            >
+                Cancel
+            </button>
+        </div>
+                    </div>
+                </div>
+                :
+                <></>
             }
             <div className='flex flex-col gap-5 p-5'>
                 <div className='flex justify-between '>
                     <div onClick={() => func(1)} className='bg-white items-center flex hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
                         <BiArrowBack className='' />
                     </div>
-                    <button onClick={() => deleteData()} className='bg-red-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
-                        delete
-                    </button>
+                    <div className='flex gap-2'>
+                        <button onClick={() => setCreateVisit(true)} className='bg-green-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
+                            Create Visit
+                        </button>
+                        <button onClick={() => setCreateVisit(true)} className='bg-orange-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
+                            add Diagnosis
+                        </button>
+                        <button onClick={() => setCreateVisit(true)} className='bg-blue-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
+                            give Prescription
+                        </button>
+                        <button onClick={() => setDeletePopupVisible(true)} className='bg-red-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
+                            delete
+                        </button>
+                    </div>
                 </div>
                 <div>
                     <div className='space-y-2'>
@@ -151,7 +271,7 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                             </div>
                             <hr className='border-gray-300' />
                             <div className='p-4 border space-y-2 rounded-lg shadow-md bg-white text-sm font-light'>
-                            {
+                                {
                                     visitData.map((visit: any, key: number) =>
                                         <div key={key} className='border-b border-gray-300 pb-2'>
                                             <div className='font-medium text-base mb-2'>
