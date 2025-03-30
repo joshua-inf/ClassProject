@@ -99,6 +99,9 @@ def get_user_count(request):
 #patient list
 @api_view(['GET', 'POST'])
 def patient_list(request):
+    patients=Patient.objects.all()
+    
+
     if request.method == 'GET':
         # Get search parameters from query params
         # Get search parameters from query params
@@ -144,9 +147,10 @@ def patient_list(request):
 def patient_detail(request, pk):
     try:
         patient = Patient.objects.get(pk=pk) #gets the patient using primary key 
+        
     except Patient.DoesNotExist:
         return Response({'error': 'Patient not found'}, status=status.HTTP_404_NOT_FOUND) #error if not found
-
+    
     if request.method == 'GET':
         serializer = PatientSerializer(patient)
         return Response(serializer.data)
