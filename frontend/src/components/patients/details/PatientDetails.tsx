@@ -10,6 +10,7 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
     const [medicalHistory, setMedicalHistory] = useState(false)
     const [loading2, setLoading2] = useState(false)
     const [diagnosis, setDiagnosis] = useState<Diagnosis[]>([]);
+    const [visitData, setVisitData] = useState<any>([]);
 
 
     const deleteData = () => {
@@ -32,13 +33,13 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
 
 
     const getVisits = () => {
-        axios.get('http://localhost:8000/api/patient/'+data.patient_id +'/visits')
-        .then((res)=> console.log(res.data))
-        .catch((err)=> console.log(err))
+        axios.get('http://localhost:8000/api/patients/' + data.patient_id + '/visits')
+            .then((res) => setVisitData(res.data))
+            .catch((err) => console.log(err))
 
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getVisits()
     })
 
@@ -144,14 +145,37 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                         </div>
 
                         {/* visit history */}
-                        <div className='flex  flex-col grow gap-2 rounded-md  p-3  cursor-pointer'>
+                        <div className='flex grow-0 p-3 cursor-pointer flex-col gap-2'>
                             <div>
                                 Visit History
                             </div>
                             <hr className='border-gray-300' />
-                                <div className='p-4 border rounded-lg shadow-md bg-white text-sm font-light'>
-                                   
-                                </div>
+                            <div className='p-4 border space-y-2 rounded-lg shadow-md bg-white text-sm font-light'>
+                            {
+                                    visitData.map((visit: any, key: number) =>
+                                        <div key={key} className='border-b border-gray-300 pb-2'>
+                                            <div className='font-medium text-base mb-2'>
+                                                Reason: {visit.reason_for_visit}
+                                            </div>
+
+                                            <div className='grid grid-cols-2 gap-4'>
+                                                {/* Left Column */}
+                                                <div className='space-y-1'>
+                                                    <div className='text-gray-600'>Clinician ID: {visit.clinician}</div>
+                                                    <div className='text-gray-600'>Blood Pressure: {visit.blood_pressure}</div>
+                                                    <div className='text-gray-600'>Temperature: {visit.temperature} °C</div>
+                                                </div>
+
+                                                <div className='space-y-1'>
+                                                    <div className='text-gray-600'>Weight: {visit.weight} kg</div>
+                                                    <div className='text-gray-600'>Visit Type: {visit.visit_type}</div>
+                                                    <div className='text-gray-600'></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
