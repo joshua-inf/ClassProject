@@ -29,6 +29,22 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
     const [deletePopupVisible, setDeletePopupVisible] = useState(false)
     const [reasonForVisit, setReasonForVisit] = useState('')
 
+    const [medicationName, setMedicationName] = useState("");
+    const [dosage, setDosage] = useState("");
+    const [instructions, setInstructions] = useState("");
+    const [quantity, setQuantity] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [prescriptionPopup, setPrescriptionPopup] = useState(false)
+    const [selectedVisitId, setSelectedVisitId] = useState<number | null>(null)
+
+    const addPrescription = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(selectedVisitId)
+
+    };
+
+
     const addVisit = (e: React.FormEvent<HTMLFormElement>) => {
         setLoading2(true)
         e.preventDefault()
@@ -94,31 +110,31 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
 
     }
 
-    const Prescription = ({data}:{data:any}) => {
+    const Prescription = ({ data }: { data: any }) => {
         const [prescriptionData, setPrescriptionData] = useState<prescriptionDataType>()
-        const getPrescriptionData =() => {
+        const getPrescriptionData = () => {
             axios.get(`http://localhost:8000/api/visits/${data}/prescriptions`)
-            .then((res)=>{
-                setPrescriptionData(res.data[0])
-                console.log(res.data)
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-            .finally(()=>{
+                .then((res) => {
+                    setPrescriptionData(res.data[0])
+                    console.log(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+                .finally(() => {
 
-            })
+                })
         }
 
-        useEffect(()=>{
+        useEffect(() => {
             getPrescriptionData()
-        },[])
+        }, [])
 
 
         return (
             <>
                 <div>
-                    {prescriptionData ? 
+                    {prescriptionData ?
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<MdKeyboardArrowDown color='black' size={20} />}
@@ -134,10 +150,6 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                     {prescriptionData?.instructions}
                                 </Typography>
                                 <Typography>
-                                    <strong>Prescribed By:</strong> Clinician ID
-                                    {prescriptionData?.prescribed_by}
-                                </Typography>
-                                <Typography>
                                     <strong>Quantity:</strong>
                                     {prescriptionData?.quantity}
                                 </Typography>
@@ -151,8 +163,8 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                 </Typography>
                             </AccordionDetails>
                         </Accordion>
-                    :
-                    <></>
+                        :
+                        <></>
                     }
                 </div>
             </>
@@ -308,6 +320,92 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                     :
                     <></>
             }
+
+
+            {
+                prescriptionPopup ?
+                    <div className='fixed top-0 left-0 flex justify-center items-center w-full h-full bg-[#00000050] z-50'>
+                        <div className='bg-white md:w-1/2 w-3/4 rounded-md p-4 z-[9999]'>
+                            <form onSubmit={addPrescription} className="text-sm space-y-5">
+                                <div className='flex flex-col'>
+                                    <label className='text-gray-600'>Medication Name</label>
+                                    <input
+                                        type='text'
+                                        value={medicationName}
+                                        onChange={(e) => setMedicationName(e.target.value)}
+                                        required
+                                        className='p-2 border border-gray-300 rounded-lg w-full outline-none'
+                                        placeholder='Enter medication name'
+                                    />
+                                </div>
+
+                                <div className='flex gap-2'>
+                                    <div className='flex flex-col grow'>
+                                        <label className='text-gray-600'>Dosage</label>
+                                        <input
+                                            type='text'
+                                            value={dosage}
+                                            onChange={(e) => setDosage(e.target.value)}
+                                            required
+                                            className='p-2 border border-gray-300 rounded-lg w-full outline-none'
+                                            placeholder='Enter dosage (e.g. 500mg)'
+                                        />
+                                    </div>
+                                    <div className='flex flex-col grow'>
+                                        <label className='text-gray-600'>Quantity</label>
+                                        <input
+                                            type='number'
+                                            value={quantity}
+                                            onChange={(e) => setQuantity(e.target.value)}
+                                            required
+                                            className='p-2 border border-gray-300 rounded-lg w-full outline-none'
+                                            placeholder='Enter quantity'
+                                        />
+                                    </div>
+                                </div>
+                                <div className='flex flex-col'>
+                                    <label className='text-gray-600'>Instructions</label>
+                                    <textarea
+                                        value={instructions}
+                                        onChange={(e) => setInstructions(e.target.value)}
+                                        required
+                                        className='p-2 border border-gray-300 rounded-lg w-full outline-none'
+                                        placeholder='Enter instructions'
+                                    />
+                                </div>
+                                <div className='flex gap-2'>
+                                    <div className='flex flex-col grow'>
+                                        <label className='text-gray-600'>Start Date</label>
+                                        <input
+                                            type='date'
+                                            value={startDate}
+                                            onChange={(e) => setStartDate(e.target.value)}
+                                            required
+                                            className='p-2 border border-gray-300 rounded-lg w-full outline-none'
+                                        />
+                                    </div>
+                                    <div className='flex flex-col grow'>
+                                        <label className='text-gray-600'>End Date</label>
+                                        <input
+                                            type='date'
+                                            value={endDate}
+                                            onChange={(e) => setEndDate(e.target.value)}
+                                            required
+                                            className='p-2 border border-gray-300 rounded-lg w-full outline-none'
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className='flex gap-3'>
+                                    <button type='submit' className='grow bg-green-600 p-2 rounded-md text-white'>Save</button>
+                                    <button type='button' onClick={() => setPrescriptionPopup(false)} className='grow bg-blue-600 p-2 rounded-md text-white'>Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    :
+                    <></>
+            }
             <div className='flex flex-col gap-5 p-5'>
                 <div className='flex justify-between '>
                     <div onClick={() => func(1)} className='bg-white items-center flex hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-md'>
@@ -335,7 +433,6 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                     <div className="font-medium text-base mb-2">
                                         {data.first_name} {data.last_name}
                                     </div>
-
                                     {/* Grid Layout for Details */}
                                     <div className="grid grid-cols-2 gap-4">
                                         {/* Left Column */}
@@ -364,47 +461,46 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                             <hr className='border-gray-300' />
                             <div className='p-4 border space-y-2 rounded-lg shadow-md bg-white text-sm font-light'>
                                 {
-                                    visitData.map((visit: any, key: number) =>
-                                        <div key={key} className='border-b border-gray-300 pb-2'>
-                                            <div className='flex justify-end'>
-                                                <div className='flex'>
+                                    visitData.map((visit: any, key:any) =>
+                                        <>
+                                            <div key={visit.id + key} className='border-b border-gray-300 pb-2'>
+                                                <div className='flex justify-end'>
+                                                    <div className='flex'>
 
-                                                    <button onClick={() => setCreateVisit(true)} className='bg-orange-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-l-md'>
-                                                        add Diagnosis
-                                                    </button>
-                                                    <button onClick={() => setCreateVisit(true)} className='bg-blue-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5'>
-                                                        give Prescription
-                                                    </button>
-                                                    <button onClick={() => setDeletePopupVisible(true)} className='bg-red-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-r-md'>
-                                                        delete
-                                                    </button>
+                                                        <button  className='bg-orange-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-l-md'>
+                                                            add Diagnosis
+                                                        </button>
+                                                        <button onClick={() => {setPrescriptionPopup(true), setSelectedVisitId(visit.id)}} className='bg-blue-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5'>
+                                                            give Prescription
+                                                        </button>
+                                                        <button onClick={() => setDeletePopupVisible(true)} className='bg-red-300 hover:scale-[1.01] transition-all duration-300 p-2 px-5 rounded-r-md'>
+                                                            delete
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className='font-medium text-base mb-2'>
-                                                Reason: {visit.reason_for_visit}
-                                            </div>
-
-                                            <div className='grid grid-cols-2 gap-4'>
-                                                {/* Left Column */}
-                                                <div className='space-y-1'>
-                                                    <div className='text-gray-600'>Clinician ID: {visit.clinician}</div>
-                                                    <div className='text-gray-600'>Blood Pressure: {visit.blood_pressure}</div>
-                                                    <div className='text-gray-600'>Temperature: {visit.temperature} °C</div>
+                                                <div className='font-medium text-base mb-2'>
+                                                    Reason: {visit.reason_for_visit}
                                                 </div>
 
-                                                <div className='space-y-1'>
-                                                    <div className='text-gray-600'>Weight: {visit.weight} kg</div>
-                                                    <div className='text-gray-600'>Visit Type: {visit.visit_type}</div>
-                                                    <div className='text-gray-600'></div>
+                                                <div className='grid grid-cols-2 gap-4'>
+                                                    {/* Left Column */}
+                                                    <div className='space-y-1'>
+                                                        <div className='text-gray-600'>Clinician ID: {visit.clinician}</div>
+                                                        <div className='text-gray-600'>Blood Pressure: {visit.blood_pressure}</div>
+                                                        <div className='text-gray-600'>Temperature: {visit.temperature} °C</div>
+                                                    </div>
+
+                                                    <div className='space-y-1'>
+                                                        <div className='text-gray-600'>Weight: {visit.weight} kg</div>
+                                                        <div className='text-gray-600'>Visit Type: {visit.visit_type}</div>
+                                                        <div className='text-gray-600'></div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Prescription data={visit.id} />
                                                 </div>
                                             </div>
-
-
-                                            <div>
-                                                
-                                                <Prescription data={visit.id} />
-                                            </div>
-                                        </div>
+                                        </>
                                     )
                                 }
                             </div>

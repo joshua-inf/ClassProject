@@ -3,7 +3,7 @@ import { patients } from '@/modals/patients'
 import { PlusIcon } from '@heroicons/react/16/solid'
 import axios from 'axios'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaArrowRight, FaSearch, FaUser } from 'react-icons/fa'
 import { PatientDetails } from './details/PatientDetails'
 
@@ -15,7 +15,7 @@ export const Patients = () => {
     const [error, setError] = useState(null)
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
-    const [totalPatients, setTotalPatients] = useState(0)
+    const [totalPatients, setTotalPatients] = useState<any>()
     const [popup, setPopup] = useState(false)
     const [success, setSuccess] = useState(false)
 
@@ -33,6 +33,8 @@ export const Patients = () => {
 
     const [searchData, setSearchData] = useState('')
     const [seachResult, setSeachResult] = useState<patients>()
+
+    const [parsedData, setParsedData] = useState<patients>();
 
 
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,6 +88,7 @@ export const Patients = () => {
                 if (res) {
                     setSuccess(true)
                     clearFields()
+                    getUser()
                 }
             })
             .catch((err) => {
@@ -96,10 +99,29 @@ export const Patients = () => {
             })
     }
 
+    const getUser = () => {
+        setLoading(true)
+        axios.get('http://localhost:8000/api/patients/')
+        .then((res)=> {
+            console.log(res.data)
+            setTotalPatients(res.data)
+        })
+        .catch((err)=> {
+            console.log(err)
+        })
+        .finally(()=>{
+            setLoading(false)
+        })
+    }
+
     const addPrescription = (e: React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
         console.log()
     }
+
+    useEffect(()=>{
+        getUser()
+    },[])
 
     if (pageNumber == 1) {
         return (
@@ -280,10 +302,11 @@ export const Patients = () => {
                                     fetching data....please wait..
                                 </div>
                             </div>
-                        ) :
+                        ) 
+                        :
                             <>
                                 {
-                                    seachResult ?
+                                    seachResult ? (
                                         <div>
                                             <div className='flex flex-col gap-2 py-5'>
                                                 <div onClick={() => setPageNuber(2)} className='rounded-md shadow p-2 px-5 cursor-pointer hover:scale-[1.01] transition-all duration-300 justify-between flex bg-white items-center gap-2'>
@@ -298,15 +321,32 @@ export const Patients = () => {
                                                     <FaArrowRight className='text-gray-500 size-5' />
                                                 </div>
                                             </div>
-
                                         </div>
-                                        :
+                                    )
+                                    :
+                                    totalPatients ? 
                                         <>
+                                         <div>
+                                            <div className='flex flex-col gap-2 py-5'>
+                                                {totalPatients.map((e:patients)=>
+                                                    <div key={e.patient_id} onClick={() => {setParsedData(e);setPageNuber(2)}} className='rounded-md shadow p-2 px-5 cursor-pointer hover:scale-[1.01] transition-all duration-300 justify-between flex bg-white items-center gap-2'>
+                                                        <div className='flex items-center gap-2'>
+                                                            <FaUser className='text-gray-500 size-7' />
+                                                            <div className='flex flex-col'>
+                                                                <div className='text-sm font-bold'>{e.first_name} {e.last_name}</div>
+                                                                <div className='text-sm font-light'>{e.patient_id}</div>
+                                                            </div>
+                                                        </div>
+                                                        <FaArrowRight className='text-gray-500 size-5' />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                         </>
+                                    :
+                                    <></>
                                 }
                             </>
-
-
                         }
                     </div>
                 </div>
@@ -314,7 +354,7 @@ export const Patients = () => {
         )
     } else if (pageNumber == 2) {
         return (
-            <PatientDetails setSeachResult={setSeachResult} func={setPageNuber} data={seachResult} />
+            <PatientDetails setSeachResult={setParsedData} func={setPageNuber} data={parsedData} />
         )
 
     }
