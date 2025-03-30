@@ -29,7 +29,7 @@ export const StuffPage = () => {
                     console.log("success: ", res.data.users)
                     setClinicianData(res.data.users)
                     setSuccess(true)
-                    getClinicianData()
+                    // getClinicianData()
                 }
             })
             .catch((err) => {
@@ -237,21 +237,22 @@ export const StuffPage = () => {
                                     <table className='w-full'>
                                         <thead className='bg-white'>
                                             <tr>
-                                                <th>first name</th>
-                                                <th>last name</th>
-                                                <th>position</th>
-                                                <th>email</th>
-                                                <th>phone number</th>
+                                                <th className='text-left p-2'>name</th>
+                                                <th className='text-left p-2'>position</th>
+                                                <th className='text-left p-2'>id</th>
+                                                <th className='text-left p-2'>email</th>
+                                                <th className='text-left p-2'>contact</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {clinicianData.map((e) =>
                                                 <tr key={e.id} className='border-b border-gray-300 hover:bg-gray-200 transition-all duration-300 cursor-pointer hover:scale-[1.01]'>
-                                                    <td className='text-center'>{e.first_name}</td>
-                                                    <td className='text-center'>{e.last_name}</td>
-                                                    <td className='text-center'>{e.specialty}</td>
-                                                    <td className='text-center'>{e.email}</td>
-                                                    <td className='text-center'>{e.phone_number}</td>
+                                                    <td className='p-2'>{e.first_name} {e.last_name}</td>
+                                                    <td className='p-2'>{e.specialty}</td>
+                                                    <td className='p-2'>{e.id}</td>
+                                                    <td className='p-2'>{e.email}</td>
+                                                    <td className='p-2'>{e.phone_number}</td>
+                                                    
                                                 </tr>
                                             )}
                                         </tbody>
