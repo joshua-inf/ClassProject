@@ -76,7 +76,7 @@ const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) => {
             <div className="space-y-1">
               <SidebarNavLink href="/" icon={FaHome}>Dashboard</SidebarNavLink>
               {
-                role == 'doctor'?
+                role != 'nurse'?
                 <SidebarNavLink href="/stuff" icon={FaUser}> stuff </SidebarNavLink>
                 :
                 <></>
