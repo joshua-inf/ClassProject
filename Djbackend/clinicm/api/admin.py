@@ -6,7 +6,6 @@ from .models import*
 admin.site.register(Visit)
 
 admin.site.register(Prescription)
-#admin.site.register(Clinician)
 
 admin.site.register(Patient)
 admin.site.register(CustomUser)

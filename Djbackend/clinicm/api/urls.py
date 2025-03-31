@@ -15,13 +15,17 @@ urlpatterns = [
     # Visits
     #path('visits/', visit_list, name='visit-list'),
     #path('visits-detail/<int:pk>/', visit_detail, name='visit-detail'),
+
+    # diagnoses
+    path('visits/<int:visit_id>/diagnoses/', visit_diagnoses, name='visit-diagnoses'), #GET and POST 
     
     #statistical
     path('statistics/', statistics_view, name="statistics"),
 
     #prescriptions
+
     path('visits/<int:visit_id>/prescriptions/', visit_prescriptions, name='visit-prescriptions'),
-    path('prescriptions-list/', prescription_list, name='prescription_list'),
+    #path('prescriptions-list/', prescription_list, name='prescription_list'),
     #path('prescriptions/<int:pk>/', prescription_detail, name='prescription_detail'),
 
 ]
