@@ -239,7 +239,6 @@ export const StuffPage = () => {
                                             <tr>
                                                 <th className='text-left p-2'>name</th>
                                                 <th className='text-left p-2'>position</th>
-                                                <th className='text-left p-2'>id</th>
                                                 <th className='text-left p-2'>email</th>
                                                 <th className='text-left p-2'>contact</th>
                                             </tr>
@@ -249,7 +248,6 @@ export const StuffPage = () => {
                                                 <tr key={e.id} className='border-b border-gray-300 hover:bg-gray-200 transition-all duration-300 cursor-pointer hover:scale-[1.01]'>
                                                     <td className='p-2'>{e.first_name} {e.last_name}</td>
                                                     <td className='p-2'>{e.specialty}</td>
-                                                    <td className='p-2'>{e.id}</td>
                                                     <td className='p-2'>{e.email}</td>
                                                     <td className='p-2'>{e.phone_number}</td>
                                                     

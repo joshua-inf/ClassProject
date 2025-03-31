@@ -157,11 +157,14 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                 expandIcon={<MdKeyboardArrowDown color='black' size={20} />}
                             >
                                 <Typography variant="subtitle1" fontWeight="bold">
-                                    {prescriptionData?.medication_name} - {prescriptionData?.dosage}
+                                   Prescription
                                 </Typography>
                             </AccordionSummary>
 
                             <AccordionDetails>
+                            <Typography>
+                                    {prescriptionData?.medication_name} - {prescriptionData?.dosage}
+                                </Typography>
                                 <Typography>
                                     <strong>Instructions:</strong>
                                     {prescriptionData?.instructions}
@@ -507,7 +510,6 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
                                                         <div className='text-gray-600'>Blood Pressure: {visit.blood_pressure}</div>
                                                         <div className='text-gray-600'>Temperature: {visit.temperature} °C</div>
                                                     </div>
-
                                                     <div className='space-y-1'>
                                                         <div className='text-gray-600'>Weight: {visit.weight} kg</div>
                                                         <div className='text-gray-600'>Visit Type: {visit.visit_type}</div>
