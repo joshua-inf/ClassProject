@@ -41,6 +41,23 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
     const addPrescription = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(selectedVisitId)
+        axios.post(`http://localhost:8000/api/visits/${selectedVisitId}/prescriptions/`, {
+            visit: selectedVisitId,
+            medication_name: medicationName,
+            dosage: dosage,
+            quantity: quantity,
+            start_date: startDate,
+            end_date: endDate,
+            instructions: instructions
+        })
+        .then((res)=>{
+            console.log(res.data)
+            setPrescriptionPopup(false)
+            getVisits()
+        })
+        .catch((err)=>{
+            console.log(err)
+        })  
 
     };
 
@@ -172,6 +189,7 @@ export const PatientDetails = ({ data, setSeachResult, func }: { data: any, setS
     }
 
 
+  
     useEffect(() => {
         getVisits()
     }, [])

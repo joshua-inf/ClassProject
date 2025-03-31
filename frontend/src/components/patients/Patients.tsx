@@ -114,10 +114,7 @@ export const Patients = () => {
         })
     }
 
-    const addPrescription = (e: React.FormEvent<HTMLFormElement>)=>{
-        e.preventDefault()
-        console.log()
-    }
+ 
 
     useEffect(()=>{
         getUser()
